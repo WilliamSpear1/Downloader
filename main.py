@@ -7,11 +7,10 @@ from selenium.webdriver.common.by import By
 from yt_dlp import YoutubeDL
 
 # Variables
-url = sys.argv[0]
-name_of_directory = sys.argv[1]
-
+url = sys.argv[1]
+name_of_directory = sys.argv[2]
 options = Options()
-service = Service(executable_path="chromedriver-linux64/chromedriver")
+service = Service(executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver")
 
 options.add_argument("--headless")
 options.add_argument("--no-sandbox")
@@ -23,8 +22,7 @@ driver = webdriver.Chrome(service=service, options=options)
 driver.get(url) # starting url
 video_titles = driver.find_elements(By.CSS_SELECTOR, 'div[id="thumbnail"')
 
-path = "/home/wilabeast/Videos/Youtube" + name_of_directory +'/'
-
+path = "/home/wilabeast/Videos/Youtube/" + name_of_directory +'/'
 if not os.path.exists(path):
     os.makedirs(path)
 
@@ -37,7 +35,8 @@ ydl_opts = {
     'rejectitle': True,
     'cookiefile': '/home/wilabeast/Downloads/cookies.txt',
     'format': 'bestvideo[height<=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-    'outtmpl': path + '%(title)s.%(ext)s'
+    'outtmpl': path + '%(title)s.%(ext)s',
+    'quiet': True
 }
 
 vurls =[]
