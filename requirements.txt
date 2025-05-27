@@ -1,0 +1,6 @@
+pip~=24.3.1
+attrs~=24.3.0
+PySocks~=1.7.1
+selenium~=4.27.1
+yt-dlp~=2024.12.23
+Flask~=3.1.1
