@@ -1,5 +1,4 @@
 import os
-from concurrent.futures.thread import ThreadPoolExecutor
 
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -11,10 +10,8 @@ from ChromeDriverFactory import ChromeDriver
 
 def create_directory(url):
     name = url.rsplit("/")[-3]
-    print(name)
     video_path  = name.upper()
     path = "/home/wilabeast/Videos/" + video_path + '/'
-    print(path)
     if not os.path.exists(path):
         os.makedirs(path)
     return path
@@ -30,7 +27,6 @@ def scrap(driver):
             video.setLink(video_titles[i].find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('href'))
             video.setTitle(video_titles[i].find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('title'))
         except NoSuchElementException:
-            print(video_titles[i])
             break
 
         if video is not None:
@@ -69,8 +65,3 @@ ydl_opts = {
     'nooverwrites': True,
     'format': 'bestvideo[height<=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[ext=mp4]/best'
 }
-with open('urls.txt', 'r') as i:
-    urls = i.read().splitlines()
-
-with ThreadPoolExecutor() as executor:
-    executor.map(run_browser, urls)
