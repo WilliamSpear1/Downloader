@@ -11,7 +11,7 @@ from ChromeDriverFactory import ChromeDriver
 def create_directory(url):
     name = url.rsplit("/")[-3]
     video_path  = name.upper()
-    path = "/home/wilabeast/Videos/" + video_path + '/'
+    path = "/videos/" + video_path + '/'
     if not os.path.exists(path):
         os.makedirs(path)
     return path
