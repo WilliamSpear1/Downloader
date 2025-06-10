@@ -13,7 +13,7 @@ def index():
 @app.route("/download", methods=['POST'])
 def download():
     url = request.form.get("url")
-    thread = threading.Thread(target=Scarper.run_browser, args=(url, ))
+    thread = threading.Thread(target=scarper.run_browser, args=(url, ))
     thread.start()
     return redirect(url_for("index"))
 
