@@ -1,20 +1,13 @@
-import os
 
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from yt_dlp import YoutubeDL
-from Video import Video
-from ChromeDriverFactory import ChromeDriver
 
-def create_directory(url):
-    name = url.rsplit("/")[-3]
-    video_path  = name.upper()
-    path = "/videos/" + video_path + '/'
-    if not os.path.exists(path):
-        os.makedirs(path)
-    return path
+from directory_handler import DirectoryHandler
+from downloader import Downloader
+from video import Video
+from chrome_driver_factory import ChromeDriver
 
 def scrap(driver):
     result = []
@@ -34,20 +27,15 @@ def scrap(driver):
 
     return result
 
-def download(videos, ydl_opts, path):
-    for i in range(len(videos)):
-        ydl_opts['outtmpl'] = path + videos[i].getTitle() + ".%(ext)s"
-        with YoutubeDL(ydl_opts) as ydl:
-            ydl.download(videos[i].getLink())
-
 def run_browser(url):
-    chrome = ChromeDriver(url)
-    driver = chrome.browser()
-    path = create_directory(url)
+    chrome                 = ChromeDriver(url)
+    driver                   = chrome.browser()
+
+    path = DirectoryHandler.create_directory(url)
 
     for i in range(3):
         videos = scrap(driver)
-        download(videos, ydl_opts, path)
+        Downloader.download_videos(videos, path)
         # find and click the next page line
         try:
             next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
@@ -56,12 +44,3 @@ def run_browser(url):
         except NoSuchElementException:
             break
     driver.quit()
-
-# 'outtmpl': path + '\\Channels\%(uploader)s\%(title)s ## %(uploader)s ## %(id)s.%(ext)s'
-ydl_opts = {
-    'ignoreerrors': True,
-    'abort_on_unavailable_fragments': True,
-    'quiet': True,
-    'nooverwrites': True,
-    'format': 'bestvideo[height<=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[ext=mp4]/best'
-}
