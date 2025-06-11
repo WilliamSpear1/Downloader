@@ -9,14 +9,12 @@ class Downloader:
         'format': 'bestvideo[height<=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[ext=mp4]/best'
     }
 
-    @staticmethod
     def download_videos(self, videos, path):
         for i in range(len(videos)):
             self.ydl_opts['outtmpl'] = path + videos[i].get_title() + ".%(ext)s"
             with YoutubeDL(self.ydl_opts) as ydl:
                 ydl.download(videos[i].get_link())
 
-    @staticmethod
     def download_video(self, video, path):
             self.ydl_opts['outtmpl'] = path + video.get_title() + ".%(ext)s"
             with YoutubeDL(self.ydl_opts) as ydl:
