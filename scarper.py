@@ -39,16 +39,17 @@ def scarp_single_video(driver, url):
 
     return video
 
-def run_browser(url, multiple):
+def run_browser(url):
     chrome = ChromeDriver(url)
     driver   = chrome.browser()
+    downloader = Downloader()
 
     path = DirectoryHandler.create_directory(url)
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
 
     for i in range(3):
         videos = scarp_multiple_videos(driver)
-        Downloader.download_videos(videos, path)
+        downloader.download_videos(videos, path)
         # find and click the next page line
         try:
             next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
