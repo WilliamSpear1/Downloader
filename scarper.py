@@ -45,16 +45,16 @@ def run_browser(url, multiple):
 
     path = DirectoryHandler.create_directory(url)
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
-    if multiple:
-        for i in range(3):
-            videos = scarp_multiple_videos(driver)
-            Downloader.download_videos(videos, path)
-            # find and click the next page line
-            try:
-                next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
-                WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.next a")))
-                driver.execute_script("arguments[0].click()", next_page_link)
-            except NoSuchElementException:
-                break
+
+    for i in range(3):
+        videos = scarp_multiple_videos(driver)
+        Downloader.download_videos(videos, path)
+        # find and click the next page line
+        try:
+            next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
+            WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.next a")))
+            driver.execute_script("arguments[0].click()", next_page_link)
+        except NoSuchElementException:
+            break
 
     driver.quit()
