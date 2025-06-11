@@ -12,12 +12,12 @@ class Downloader:
     @staticmethod
     def download_videos(self, videos, path):
         for i in range(len(videos)):
-            self.ydl_opts['outtmpl'] = path + videos[i].getTitle() + ".%(ext)s"
+            self.ydl_opts['outtmpl'] = path + videos[i].get_title() + ".%(ext)s"
             with YoutubeDL(self.ydl_opts) as ydl:
-                ydl.download(videos[i].getLink())
+                ydl.download(videos[i].get_link())
 
     @staticmethod
     def download_video(self, video, path):
-            self.ydl_opts['outtmpl'] = path + video.getTitle() + ".%(ext)s"
+            self.ydl_opts['outtmpl'] = path + video.get_title() + ".%(ext)s"
             with YoutubeDL(self.ydl_opts) as ydl:
-                ydl.download(video.getLink())
+                ydl.download(video.get_link())
