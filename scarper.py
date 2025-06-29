@@ -47,7 +47,7 @@ def run_browser(url):
     path = DirectoryHandler.create_directory(url)
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
 
-    for i in range(3):
+    for i in range(5):
         videos = scarp_multiple_videos(driver)
         downloader.download_videos(videos, path)
         # find and click the next page line
