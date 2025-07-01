@@ -6,6 +6,7 @@ class Downloader:
         'abort_on_unavailable_fragments': True,
         'quiet': True,
         'nooverwrites': True,
+        'ratelimit': 500000,  # 5 MB/s
         'format': 'bestvideo[height<=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[ext=mp4]/best'
     }
 
