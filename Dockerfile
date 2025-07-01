@@ -16,4 +16,6 @@ RUN apt-get update && \
     rm google-chrome-stable_current_amd64.deb && \
     apt-get clean
 
-CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:app"]

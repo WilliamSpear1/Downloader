@@ -16,6 +16,3 @@ def download():
     thread = threading.Thread(target=scarper.run_browser, args=(url, ))
     thread.start()
     return redirect(url_for("index"))
-
-if __name__ == "__main__":
-    app.run()
