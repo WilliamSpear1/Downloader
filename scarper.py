@@ -1,3 +1,4 @@
+import logging
 
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -44,9 +45,11 @@ def run_browser(url):
     driver   = chrome.browser()
     downloader = Downloader()
 
+    logging.info("Creating directory for downloads.")
+
     path = DirectoryHandler.create_directory(url)
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
-
+    logging.info("Going to download Videos")
     for i in range(5):
         videos = scarp_multiple_videos(driver)
         downloader.download_videos(videos, path)
@@ -57,5 +60,7 @@ def run_browser(url):
             driver.execute_script("arguments[0].click()", next_page_link)
         except NoSuchElementException:
             break
+
+    logging.info("Finished downloading videos.")
 
     driver.quit()
