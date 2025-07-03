@@ -10,6 +10,12 @@ from downloader import Downloader
 from video import Video
 from chrome_driver_factory import ChromeDriver
 
+logging.basicConfig(
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+)
+
 def scarp_multiple_videos(driver):
     result = []
     video_titles = driver.find_elements(By.CSS_SELECTOR, "div.item-info")

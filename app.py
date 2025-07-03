@@ -6,7 +6,11 @@ import scarper
 import logging
 
 app = Flask(__name__)
-
+logging.basicConfig(
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+)
 @app.route("/")
 def index():
     logging.info("Rendering index page.")
