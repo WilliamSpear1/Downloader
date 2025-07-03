@@ -1,5 +1,3 @@
-import logging
-
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,14 +5,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from directory_handler import DirectoryHandler
 from downloader import Downloader
+from logs.logger_config import setup_logging
 from video import Video
 from chrome_driver_factory import ChromeDriver
 
-logging.basicConfig(
-    format="{asctime} - {levelname} - {message}",
-    style="{",
-    datefmt="%Y-%m-%d %H:%M",
-)
+logger = setup_logging()
 
 def scarp_multiple_videos(driver):
     result = []
@@ -51,13 +46,13 @@ def run_browser(url):
     driver   = chrome.browser()
     downloader = Downloader()
 
-    logging.info("Creating directory for downloads.")
+    logger.info("Creating directory for downloads.")
 
     path = DirectoryHandler.create_directory(url)
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
-    logging.info("Going to download Videos")
+    logger.info("Going to download Videos")
     for i in range(5):
-        logging.info("Starting page %d", i + 1)
+        logger.info("Starting page %d", i + 1)
         videos = scarp_multiple_videos(driver)
         downloader.download_videos(videos, path)
         # find and click the next page line
@@ -68,6 +63,6 @@ def run_browser(url):
         except NoSuchElementException:
             break
 
-    logging.info("Finished downloading videos.")
+    logger.info("Finished downloading videos.")
 
     driver.quit()
