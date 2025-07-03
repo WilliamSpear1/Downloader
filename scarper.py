@@ -51,6 +51,7 @@ def run_browser(url):
     #TODO: Find a way to to indicate if downloading multiple videos or a single video.
     logging.info("Going to download Videos")
     for i in range(5):
+        logging.info("Starting page %d", i + 1)
         videos = scarp_multiple_videos(driver)
         downloader.download_videos(videos, path)
         # find and click the next page line
