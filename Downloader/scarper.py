@@ -5,13 +5,16 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from Downloader.directory_handler import DirectoryHandler
 from Downloader.downloader import Downloader
-from logs.logger_config import setup_logging
+from Downloader.logs.logger_config import setup_logging
 from Downloader.data.video import Video
 from Downloader.chrome_driver_factory import ChromeDriver
 
-logger = setup_logging()
+logger = setup_logging(__name__)
 
 class Scarper:
+    def __init__(self, url):
+        self.url = url
+
     def scarp_multiple_videos(self, driver) -> list:
         result = []
         video_titles = driver.find_elements(By.CSS_SELECTOR, "div.item-info")
@@ -30,14 +33,14 @@ class Scarper:
 
         return result
 
-    def run_browser(self, url) -> None:
-        chrome = ChromeDriver(url)
+    def run_browser(self) -> None:
+        chrome = ChromeDriver(self.url)
         driver = chrome.get_driver()
         downloader = Downloader()
 
         logger.info("Creating directory for downloads.")
 
-        path = DirectoryHandler.create_directory(url)
+        path = DirectoryHandler.create_directory(self.url)
         logger.info("Going to download Videos")
 
         for i in range(5):
