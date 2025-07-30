@@ -1,12 +1,10 @@
-from webbrowser import Chrome
-
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from logs.logger_config import setup_logging
+from Downloader.logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
