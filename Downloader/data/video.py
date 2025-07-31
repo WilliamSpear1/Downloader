@@ -1,6 +1,10 @@
 import re
 
 class Video:
+    def __init__(self, title="", link="") -> None:
+        self._title = title
+        self._link = link
+
     def set_link(self, link) -> None:
             self._link = link
 

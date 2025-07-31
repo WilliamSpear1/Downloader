@@ -1,5 +1,8 @@
 from yt_dlp import YoutubeDL
 
+from Downloader.logs.logger_config import setup_logging
+
+logger = setup_logging(__name__)
 class Downloader:
     ydl_opts = {
         'ignoreerrors': True,
@@ -11,10 +14,9 @@ class Downloader:
     }
 
     def download_videos(self, videos, path) -> None:
-        for i in range(len(videos)):
-            self.ydl_opts['outtmpl'] = path + videos[i].get_title() + ".%(ext)s"
-            with YoutubeDL(self.ydl_opts) as ydl:
-                ydl.download(videos[i].get_link())
+        logger.info(f"The Number of videos set for downloading: {len(videos)}")
+        for video in videos:
+            self.download_video(video, path)
 
     def download_video(self, video, path) -> None:
             self.ydl_opts['outtmpl'] = path + video.get_title() + ".%(ext)s"

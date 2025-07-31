@@ -25,7 +25,8 @@ class Scarper:
             try:
                 video.set_link(video_titles[i].find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('href'))
                 video.set_title(video_titles[i].find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('title'))
-            except NoSuchElementException:
+            except NoSuchElementException as e:
+                logger.error(f"No Such Element Exception Has Occurred: {e}")
                 break
 
             if video is not None:
@@ -38,10 +39,7 @@ class Scarper:
         driver = chrome.get_driver()
         downloader = Downloader()
 
-        logger.info("Creating directory for downloads.")
-
         path = DirectoryHandler.create_directory(self.url)
-        logger.info("Going to download Videos")
 
         for i in range(5):
             logger.info("Starting page %d", i + 1)
@@ -52,7 +50,8 @@ class Scarper:
                 next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
                 WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.next a")))
                 driver.execute_script("arguments[0].click()", next_page_link)
-            except NoSuchElementException:
+            except NoSuchElementException as e:
+                logger.error(f"No Such Element Exception Has Occurred: {e}")
                 break
 
         logger.info("Finished downloading videos.")
