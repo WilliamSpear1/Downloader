@@ -12,9 +12,19 @@
 
 	<form class="ui form" action="/download" method="post">
 		<div class="field">
-			<label for="url_field">URL</label>
-			<input type="text" id = "url_field" name="url" placeholder="Enter URL...">
-			<br>
+			<!-- URL FIELD -->
+			<label style="margin-top: 5em;" for="url_field">URL</label>
+			<input style="margin-bottom: 5em;" type="text" id = "url_field" name="url" placeholder="Enter URL...">
+
+			<!-- PARENT FIELD -->
+			<label for="parent_directory_field">Parent Directory</label>
+			<input style="margin-bottom: 4em;" type="text" id = "parent_directory_field" name="parent_directory" placeholder="Enter Parent Directory...">
+
+			<!-- NUMBER OF PAGES FIELD -->
+			<label for="number_field">NUMBER OF PAGES</label>
+			<input style="margin-bottom: 5em;" type="number" id = "number_field" name="number_of_pages" placeholder="Enter Number of Pages...">
+
+			<!-- SUBMIT BUTTON -->
 			<button class="ui blue button" type="submit">Download</button>
 		</div>
 	</form>

@@ -12,8 +12,10 @@ from Downloader.chrome_driver_factory import ChromeDriver
 logger = setup_logging(__name__)
 
 class Scarper:
-    def __init__(self, url):
+    def __init__(self, url, number_of__pages, parent_directory=""):
         self.url = url
+        self.number_of_pages = number_of__pages
+        self.parent_directory = parent_directory
 
     def scarp_multiple_videos(self, driver) -> list:
         result = []
@@ -39,9 +41,12 @@ class Scarper:
         driver = chrome.get_driver()
         downloader = Downloader()
 
-        path = DirectoryHandler.create_directory(self.url)
+        logger.info(f"Url in Scarper: {self.url}")
+        logger.info(f"Parent Directory in Scarper: {self.parent_directory}")
 
-        for i in range(5):
+        path = DirectoryHandler.create_directory(self.url, self.parent_directory)
+
+        for i in range(self.number_of_pages):
             logger.info("Starting page %d", i + 1)
             videos = self.scarp_multiple_videos(driver)
             downloader.download_videos(videos, path)
