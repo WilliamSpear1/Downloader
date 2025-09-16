@@ -19,18 +19,15 @@ def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:
     chrome = ChromeDriver(url)
     driver = chrome.get_driver()
     downloader = Downloader()
-    directory_handler = DirectoryHandler()
     scarper = Scarper(url, number_of_pages, parent_directory)
 
     logger.info(f"Starting scrape -> {url}, Parent Dir: {parent_directory}")
-
-    path = directory_handler.create_directory_url(url=url, parent_directory=parent_directory)
 
     try:
         for page in range(1, number_of_pages + 1):
             logger.info(f"Processing page {page}/{number_of_pages}")
 
-            videos = scarper.scrape_multiple_videos(driver, path)
+            videos = scarper.scrape_multiple_videos(driver, parent_directory)
 
             if videos:
                 downloader.download_videos(videos)

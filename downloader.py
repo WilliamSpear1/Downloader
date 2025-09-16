@@ -33,32 +33,34 @@ class Downloader:
             self.download_video(video)
 
     def download_video(self, video:Video) -> None:
-            logger.info(f"Final Result: {video.path}.%(ext)s")
+        logger.info(f"Video Path: {video.path}")
+        logger.info(f"Video Title: {video.title}")
+        logger.info(f"Video Link: {video.link}")
 
-            opts = self.ydl_opts.copy()
-            opts['outtmpl'] = video.path + ".%(ext)s"
+        opts = self.ydl_opts.copy()
+        opts['outtmpl'] = video.path + ".%(ext)s"
 
-            with YoutubeDL(opts) as ydl:
-                # Extract info *without downloading* to see available formats
-                try:
-                    # probe metadata
-                    info = ydl.extract_info(video.link, download=False)
-                except Exception as e:
-                    logger.warning(f"Skipping {video.title}: failed to extract info ({e})")
-                    return
+        with YoutubeDL(opts) as ydl:
+            # Extract info *without downloading* to see available formats
+            try:
+                # probe metadata
+                info = ydl.extract_info(video.link, download=False)
+            except Exception as e:
+                logger.warning(f"Skipping {video.title}: failed to extract info ({e})")
+                return
 
-                if not info or 'formats' not in info:
-                    logger.warning(f"Skipping {video.title}: no formats available")
-                    return
+            if not info or 'formats' not in info:
+                logger.warning(f"Skipping {video.title}: no formats available")
+                return
 
-                    # check if our selector finds a match
-                selector = ydl.build_format_selector(opts['format'])
-                chosen = selector(info)
+                # check if our selector finds a match
+            selector = ydl.build_format_selector(opts['format'])
+            chosen = selector(info)
 
-                if not chosen:
-                    logger.warning(f"Skipping {video.title}: no format matched {opts['format']}")
-                    return
+            if not chosen:
+                logger.warning(f"Skipping {video.title}: no format matched {opts['format']}")
+                return
 
-                # safe to download
-                logger.info(f"Downloading {video.title}")
-                ydl.download([video.link])
+            # safe to download
+            logger.info(f"Downloading {video.title}")
+            ydl.download([video.link])

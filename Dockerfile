@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Install runtime dependencies + Chromium for Selenium
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    chromium chromium-driver \
+    chromium \
     wget unzip fonts-liberation \
     libglib2.0-0 libnss3 libx11-6 libx11-xcb1 libxcomposite1 libxcursor1 \
     libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 \

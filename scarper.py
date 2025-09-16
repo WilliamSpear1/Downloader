@@ -1,6 +1,8 @@
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+
+from directory_handler import DirectoryHandler
 from logs.logger_config import setup_logging
 from data.video import Video
 
@@ -13,18 +15,19 @@ class Scarper:
         self.parent_directory = parent_directory
 
     @staticmethod
-    def scrape_multiple_videos(driver: WebDriver, path:str) -> list:
+    def scrape_multiple_videos(driver: WebDriver, parent_directory:str) -> list:
         """Extract Video Elements (title + link) from current page."""
+        directory_handler = DirectoryHandler()
         videos = []
         video_elements = driver.find_elements(By.CSS_SELECTOR, "div.item-info")
 
         for element in video_elements:
             try:
                 video = Video(
-                    title=element.find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('href'),
-                    link= element.find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('title'),
-                    path=path
+                    link=element.find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('href'),
+                    title= element.find_element(By.CSS_SELECTOR, 'a.thumb_title').get_attribute('title'),
                 )
+                video.path = directory_handler.create_directory_url(video.link, parent_directory)
                 videos.append(video)
             except NoSuchElementException as e:
                 logger.warning(f"No Such Element Exception Has Occurred: {e}")

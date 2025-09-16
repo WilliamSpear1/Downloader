@@ -18,13 +18,12 @@ class ChromeDriver:
 
     def browser(self) -> WebDriver:
         options = Options()
-        service = Service(ChromeDriverManager().install())
 
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(options=options)
         driver.get(self.url)
         return driver
 
