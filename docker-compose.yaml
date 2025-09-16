@@ -1,0 +1,39 @@
+services:
+  # Url Processor Container
+  downloader:
+    image: registry.spearmanwm.dev/downloader:latest
+    container_name: downloader
+    volumes:
+      - type: bind
+        source: /Videos
+        target: /videos
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - PUID=568
+      - PGID=568
+      - TZ=America/New_York
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - HITS=${HITS}
+      - FREE=${FREE}
+      - MANY=${MANY}
+      - URL_PROCESSOR=${URL_PROCESSOR}
+    networks:
+      - app-net
+  # Celery Worker Container
+  downloader-celery-worker:
+    image: registry.spearmanwm.dev/downloader:latest
+    container_name: celery_worker_downloader
+    command: celery -A tasks worker -Q downloader_queue --events -l info
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    depends_on:
+      - downloader
+
+networks:
+  app-net:
+    external: true

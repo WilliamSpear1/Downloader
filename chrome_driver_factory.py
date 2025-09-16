@@ -4,12 +4,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from Downloader.logs.logger_config import setup_logging
+from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
 class ChromeDriver:
-    def __init__(self, url) -> None:
+    def __init__(self, url:str) -> None:
         self.url = url
         self.driver = self.browser()
 

@@ -58,7 +58,7 @@ def compress_rotated_log(source, dest) -> None:
     #wb -> write binary mode
     #f_in -> file object that is being read from
 
-    with open(source, 'rb') as f_in, gzip.open(dest + '.gz', 'wb') as f_out:
+    with open(source, 'rb') as f_in, gzip.open(dest, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
     os.remove(source)
 

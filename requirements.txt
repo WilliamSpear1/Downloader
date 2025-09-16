@@ -1,8 +1,12 @@
+celery
+pydantic
+redis
 pip
 attrs
 PySocks
 selenium
 yt-dlp
-Flask
+flask
 webdriver-manager
 gunicorn
+ffmpeg
