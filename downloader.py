@@ -6,6 +6,12 @@ from logs.logger_config import setup_logging
 logger = setup_logging(__name__)
 
 class Downloader:
+    def skip_short_videos(info_dict, incomplete):
+        duration = info_dict.get("duration")
+        if duration is not None and duration < 20 * 60:  # 20 mins in seconds
+            return f"Video too short: {duration / 60:.1f} minutes"
+        return None  # Accept the video
+
     ydl_opts = {
         # General Settings
         'quiet': True,
@@ -23,6 +29,7 @@ class Downloader:
             'best[height>=720]'
         ),
 
+       "match_filter": skip_short_videos, # 1200 seconds = 20 mins
         # Merge video and audio into mp4 container
         'merge_output_format': 'mp4'
     }

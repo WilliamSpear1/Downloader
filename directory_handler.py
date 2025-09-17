@@ -15,7 +15,13 @@ class DirectoryHandler:
         try:
             if "hits" in url:
                 query = urlparse(url).query
-                directory_name = parse_qs(query).get("q", [""])[0]
+                params = parse_qs(query)
+
+                if "q" in params:
+                    directory_name = params.get("q", [""])[0]
+                else:
+                   directory_name = params.get("spon",[""])[0]
+
                 logger.info(f"Directory Name: {directory_name}")
             else:
                 parts = urlparse(url).path.rstrip("/").split("/")
