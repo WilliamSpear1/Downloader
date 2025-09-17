@@ -5,23 +5,20 @@ pipeline {
     environment {
         REGISTRY = 'registry.spearmanwm.dev'
         IMAGE_NAME = 'downloader'
-        IMAGE_TAG = "${env.BUILD_NUMBER}"
-        IMAGE_FULL = "${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+        HOME = '${WORKSPACE}'
     }
 
     stages {
         stage('clone') {
             steps {
-                git branch: 'main',
-                     credentialsId: 'GitHubCredentials',
-                        url: 'https://github.com/WilliamSpear1/Downloader.git'
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHubCredentials', url: 'https://github.com/WilliamSpear1/Downloader.git']])
             }
         }
 
         stage('build docker image') {
             steps {
                 script {
-                    dockerImage = docker.build("${IMAGE_FULL}")
+                    dockerImage = docker.build("${REGISTRY}/${IMAGE_NAME}:latest")
                 }
             }
         }
