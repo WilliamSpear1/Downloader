@@ -36,9 +36,11 @@ class Downloader:
         logger.info(f"Video Path: {video.path}")
         logger.info(f"Video Title: {video.title}")
         logger.info(f"Video Link: {video.link}")
+        video_path = video.path + "/" + video.title
+        logger.info(f"Path: {video_path}")
 
         opts = self.ydl_opts.copy()
-        opts['outtmpl'] = video.path + video.title + ".%(ext)s"
+        opts['outtmpl'] = video_path + ".%(ext)s"
 
         with YoutubeDL(opts) as ydl:
             # Extract info *without downloading* to see available formats
