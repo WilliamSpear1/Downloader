@@ -38,7 +38,7 @@ def download() -> Response:
         check_url = "http://url_processor:5001/task-status"
         logger.info(f"Check URL: {check_url}")
         monitor = Monitor(task_id, check_url)
-        thread = threading.Thread(target=monitor.probe, args=(parent_directory,), daemon=True)
+        thread = threading.Thread(target=monitor.probe, args=(url,parent_directory,), daemon=True)
         thread.start()
 
     return redirect(url_for("index"))
