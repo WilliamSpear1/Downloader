@@ -5,7 +5,7 @@ services:
     container_name: downloader
     volumes:
       - type: bind
-        source: /Videos
+        source: /home/wilabeast/Videos
         target: /videos
     restart: unless-stopped
     ports:
@@ -21,6 +21,8 @@ services:
       - FREE=${FREE}
       - MANY=${MANY}
       - URL_PROCESSOR=${URL_PROCESSOR}
+      - CHECK_URL=${CHECK_URL}
+      - UPLOAD_URL=${UPLOAD_URL}
     networks:
       - app-net
   # Celery Worker Container

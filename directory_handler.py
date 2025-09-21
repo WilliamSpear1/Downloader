@@ -38,3 +38,11 @@ class DirectoryHandler:
         video_path.mkdir(parents=True, exist_ok=True)
 
         return str(video_path)
+
+    @staticmethod
+    def create_directory(parent_directory: str | None = None) -> str:
+        """Create a directory for a given url under /videos."""
+        logger.info(f"Creating Directory for {parent_directory}")
+        path = Path("/videos").joinpath(parent_directory)
+        path.mkdir(parents=True, exist_ok=True)
+        return str(path)

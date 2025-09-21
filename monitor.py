@@ -17,17 +17,21 @@ class Monitor:
         self._parent_directory = parent_directory
         self._interval = interval
 
-    def probe(self, url:str, parent_directory:str="") -> None:
+    def probe(self, parent_directory, url:str="") -> None:
         downloader = Downloader()
         directory_handler = DirectoryHandler()
         status  = None
 
         while status is None:
             status = self.monitor_task()
+
             if status is None:
                 time.sleep(self._interval)
 
-        path = directory_handler.create_directory_url(url, parent_directory)
+        if url:
+            path = directory_handler.create_directory_url(url, parent_directory)
+        else:
+            path = directory_handler.create_directory(parent_directory)
 
         videos = [Video(title=title, link=link, path=path) for title, link in status.items()]
         logger.info(f"Found {len(videos)} videos on the page.")
