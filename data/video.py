@@ -8,7 +8,10 @@ logger = setup_logging(__name__)
 class Video:
     def __init__(self, title: str = "", link: str = "", path = "") -> None:
         if "hit" in link:
-            self._title = self.get_videos_title(video_title=title, title_position=0, name_position=1)
+            if "[" in title:
+                self._title = title
+            else:
+                self._title = self.get_videos_title(video_title=title, title_position=0, name_position=1)
         else:
             self._title = self.get_videos_title(video_title=title, title_position=1, name_position=2)
         self._link = link
