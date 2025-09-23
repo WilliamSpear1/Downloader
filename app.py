@@ -26,10 +26,6 @@ def download() -> Response:
     parent_directory = request.form.get("parent_directory")
     number_of_pages = int(request.form.get("number_of_pages") or 0)
 
-    logger.info(f"URL: {url}")
-    logger.info(f"Parent Directory: {parent_directory}")
-    logger.info(f"Number of Pages: {number_of_pages}")
-
     task_id = route_handler.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
 
@@ -57,18 +53,10 @@ def upload() -> tuple[Response, int]:
 
     return jsonify({"task_id": task_id, "status": "processing"}), 202
 
-def check_task(task_id:str,parent_directory,url:str="",) -> None:
+def check_task(task_id:str,parent_directory,url:str="") -> None:
     properties = Properties()
 
     check_url = properties.get_check_url()
-    logger.info(f"Check URL: {check_url}")
     monitor = Monitor(task_id, check_url)
-    thread = threading.Thread(target=monitor.probe, args=(url, parent_directory,), daemon=True)
+    thread = threading.Thread(target=monitor.probe, args=(parent_directory,url), daemon=True)
     thread.start()
-
-def process_urls(file_path: str) -> list:
-    urls = []
-    with open(file_path, "r") as file:
-        for line in file:
-            urls.append(line)
-    return urls

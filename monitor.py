@@ -20,7 +20,7 @@ class Monitor:
     def probe(self, parent_directory, url:str="") -> None:
         downloader = Downloader()
         directory_handler = DirectoryHandler()
-        status  = None
+        status = None
 
         while status is None:
             status = self.monitor_task()
@@ -36,11 +36,6 @@ class Monitor:
         videos = [Video(title=title, link=link, path=path) for title, link in status.items()]
         logger.info(f"Found {len(videos)} videos on the page.")
 
-        for video in videos:
-            logger.info(f"Link: {video.link}")
-            logger.info(f"Title: {video.title}")
-            logger.info(f"Video Path Variable: {video.path}")
-
         if videos:
             downloader.download_videos(videos)
         else:
@@ -48,9 +43,6 @@ class Monitor:
         return None
 
     def monitor_task(self) -> dict | None:
-        logger.info(f"Probing for: {self._task_id}")
-        logger.info(f"CHECK URL: {self._check_url}")
-
         try:
             response = requests.get(
                 f"{self._check_url}/{self._task_id}",
@@ -59,7 +51,9 @@ class Monitor:
             response.raise_for_status()
             data = response.json()
             status = data.get ('status')
+
             logger.info(f"Task {self._task_id} status: {data.get('status')}, result: {data.get('result')}")
+
             if status == 'Success':
                 return data.get('result')
             elif status == 'Pending':

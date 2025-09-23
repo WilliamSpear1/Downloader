@@ -40,11 +40,7 @@ class Downloader:
             self.download_video(video)
 
     def download_video(self, video:Video) -> None:
-        logger.info(f"Video Path: {video.path}")
-        logger.info(f"Video Title: {video.title}")
-        logger.info(f"Video Link: {video.link}")
         video_path = video.path + "/" + video.title
-        logger.info(f"Path: {video_path}")
 
         opts = self.ydl_opts.copy()
         opts['outtmpl'] = video_path + ".%(ext)s"
@@ -56,20 +52,21 @@ class Downloader:
                 info = ydl.extract_info(video.link, download=False)
             except Exception as e:
                 logger.warning(f"Skipping {video.title}: failed to extract info ({e})")
-                return
+                return None
 
             if not info or 'formats' not in info:
                 logger.warning(f"Skipping {video.title}: no formats available")
-                return
+                return None
 
-                # check if our selector finds a match
+            # check if our selector finds a match
             selector = ydl.build_format_selector(opts['format'])
             chosen = selector(info)
 
             if not chosen:
                 logger.warning(f"Skipping {video.title}: no format matched {opts['format']}")
-                return
+                return None
 
             # safe to download
             logger.info(f"Downloading {video.title}")
             ydl.download([video.link])
+            return None

@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
@@ -8,34 +9,39 @@ logger = setup_logging(__name__)
 
 class DirectoryHandler:
     @staticmethod
-    def create_directory_url(url:str, parent_directory:str | None = None) -> str:
-        """Create a directory for a given url under /videos."""
+    def safe_dir_name(name: str) -> str:
+        """Sanitize string to be filesystem-safe."""
+        return re.sub(r"[^a-zA-Z0-9_\-]", "_", name).strip("_") or "default"
+
+    def create_directory_url(self, url: str, parent_directory: str | None = None) -> str:
+        """Create a directory for a given url under /videos path."""
         logger.info(f"Creating Directory for {url}")
 
-        try:
-            if "hits" in url:
-                query = urlparse(url).query
-                params = parse_qs(query)
+        directory_name = None
+        parsed = urlparse(url)
 
-                if "q" in params:
-                    directory_name = params.get("q", [""])[0]
-                else:
-                   directory_name = params.get("spon",[""])[0]
-
-                logger.info(f"Directory Name: {directory_name}")
-            else:
-                parts = urlparse(url).path.rstrip("/").split("/")
-                logger.info(f"Parts: {parts}")
+        if "hits" in url:
+            params = parse_qs(parsed.query)
+            directory_name = params.get("ps", [None])[0] or params.get("spon", [None])[0]
+        else:
+            parts = parsed.path.rstrip("/").split("/")
+            if parts and parts[-1]:
                 directory_name = parts[-1]
-                logger.info(f"Directory Name: {directory_name}")
-        except IndexError:
-            logger.info(f"Invalid URL Structure: {url}")
+
+        if not directory_name:
+            logger.error(f"Cannot extract directory name from the URL")
             raise ValueError(f"Cannot extract directory name from URL: {url}")
 
+        # Sanitize directory name
+        directory_name = self.safe_dir_name(directory_name)
+
+        # Build path
         parts = [p.upper() for p in (parent_directory, directory_name) if p]
         video_path = Path("/videos").joinpath(*parts)
 
+        # Create directory
         video_path.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Created directory: {video_path}")
 
         return str(video_path)
 
