@@ -1,14 +1,18 @@
+import logging
+
 from yt_dlp import YoutubeDL
 
 from data.video import Video
 from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
+logging.getLogger('yt-dlp').setLevel(logging.WARNING)
 
 class Downloader:
     def skip_short_videos(info_dict, incomplete):
         duration = info_dict.get("duration")
         if duration is not None and duration < 20 * 60:  # 20 mins in seconds
+            logger.info(f"Video too short: {duration / 60:.1f} minutes")
             return f"Video too short: {duration / 60:.1f} minutes"
         return None  # Accept the video
 
@@ -22,16 +26,18 @@ class Downloader:
         'hls_use_mpegts': True,
 
          # Stop if a fragment is missing
-        'abort_on_unavailable_fragments': True,
+        'abort_on_unavailable_fragments': False,
         'format': (
             'bestvideo[height>=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/'
             'best[height>=720][ext=mp4]/'
             'best[height>=720]'
         ),
-
+        'retries': 10,                                 # number of times to retry the whole download
+        'fragment_retries': 20,                 # retries per fragment
+        'retry_streams': 5,                        # retry the whole stream if fragments fail
+        'socket_timeout': 60,                    # increase timeout to handle slow fragments
        "match_filter": skip_short_videos, # 1200 seconds = 20 mins
-        # Merge video and audio into mp4 container
-        'merge_output_format': 'mp4'
+        'merge_output_format': 'mp4'      # Merge video and audio into mp4 container
     }
 
     def download_videos(self, videos:list) -> None:
