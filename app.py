@@ -38,6 +38,8 @@ def download() -> Response:
 def upload() -> tuple[Response, int]:
     route_handler = RouteHandler(Properties())
 
+    logger.info("Here in File Upload");
+
     uploaded_file = request.files["file"]
     parent_directory = request.form.get("parent_directory")
 

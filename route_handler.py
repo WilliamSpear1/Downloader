@@ -68,6 +68,7 @@ class RouteHandler:
         logger.info(f"UPLOAD URL: {upload_url}")
         files = {"file": (uploaded_file.filename, uploaded_file.stream)}
 
+        logger.info("Sending off file")
         response = requests.post(upload_url, files=files)
 
         response.raise_for_status()

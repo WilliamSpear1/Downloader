@@ -28,6 +28,9 @@ class Monitor:
             if status is None:
                 time.sleep(self._interval)
 
+        logger.info("In Probe")
+        logger.info("Create Directory")
+
         if url:
             path = directory_handler.create_directory_url(url, parent_directory)
         else:

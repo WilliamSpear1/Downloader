@@ -6,7 +6,7 @@ from data.video import Video
 from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
-logging.getLogger('yt-dlp').setLevel(logging.WARNING)
+logging.getLogger('yt-dlp').setLevel(logging.ERROR)
 
 class Downloader:
     def skip_short_videos(info_dict, incomplete):

@@ -60,7 +60,9 @@ def compress_rotated_log(source, dest) -> None:
 
     with open(source, 'rb') as f_in, gzip.open(dest, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
-    os.remove(source)
+
+    if os.path.exists(source):
+        os.remove(source)
 
 def add_rotator(logger) -> None:
     for handler in logger.handlers:
@@ -75,5 +77,5 @@ def setup_logging(name) -> Logger:
     logging.config.dictConfig(LOGGING_CONFIG)
     logger = logging.getLogger('app_logger')
     add_rotator(logger)
-    logger.info("Logging is set up in: %s", name)
+    logger.info(f"Logging is set up in: {name}")
     return logger
