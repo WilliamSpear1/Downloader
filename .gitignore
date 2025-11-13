@@ -1,1 +1,74 @@
-urls.txt
+# ================================
+# Node / React / TailwindCSS
+# ================================
+
+# dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# testing
+coverage/
+jest.config.js
+
+# production
+build/
+dist/
+
+# misc
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor / OS files
+.DS_Store
+Thumbs.db
+
+# ================================
+# Python
+# ================================
+
+# bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtual environments
+venv/
+.env/
+.env.*
+.venv/
+
+# distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+pip-wheel-metadata/
+
+# testing
+.coverage
+.tox/
+pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# pyenv
+.python-version
+
+# editor files
+.idea/
+.vscode/
+*.swp
