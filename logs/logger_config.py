@@ -7,8 +7,6 @@ import shutil
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
-from gunicorn.glogging import Logger
-
 #Ensure the logs directory exists
 Path("logs").mkdir(parents=True, exist_ok=True)
 
@@ -70,7 +68,7 @@ def add_rotator(logger) -> None:
             handler.rotator = compress_rotated_log
             handler.namer = lambda name: name + '.gz'
 
-def setup_logging(name) -> Logger:
+def setup_logging(name) -> logging.Logger:
     """
     Set up logging configuration.
     """
