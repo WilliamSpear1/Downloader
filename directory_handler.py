@@ -36,13 +36,6 @@ class DirectoryHandler:
         os.makedirs(video_path, exist_ok=True)
         logger.info(f"Created directory: {video_path}")
 
-        # Verify write permissions
-        test_file = video_path / ".write_test"
-        test_file.touch()
-        test_file.unlink()
-
-        logger.info(f"✓ Created directory: {video_path}")
-        logger.info(f"✓ Permissions verified for: {video_path}")
         return str(video_path)
 
     @staticmethod
