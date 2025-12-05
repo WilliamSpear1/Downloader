@@ -8,10 +8,6 @@ from logs.logger_config import setup_logging
 logger = setup_logging(__name__)
 
 class DirectoryHandler:
-    @staticmethod
-    def safe_dir_name(name: str) -> str:
-        """Sanitize string to be filesystem-safe."""
-        return re.sub(r"[^a-zA-Z0-9_\-]", "_", name).strip("_") or "default"
 
     def create_directory_url(self, url: str, parent_directory: str | None = None) -> str:
         """Create a directory for a given url under /videos path."""
@@ -25,8 +21,7 @@ class DirectoryHandler:
             directory_name = params.get("ps", [None])[0] or params.get("spon", [None])[0]
         else:
             parts = parsed.path.rstrip("/").split("/")
-            if parts and parts[-1]:
-                directory_name = parts[-1]
+            directory_name = self._get_end(parts)
 
         if not directory_name:
             logger.error(f"Cannot extract directory name from the URL")
@@ -52,3 +47,26 @@ class DirectoryHandler:
         path = Path("/videos").joinpath(parent_directory)
         path.mkdir(parents=True, exist_ok=True)
         return str(path)
+
+    @staticmethod
+    def safe_dir_name(name: str) -> str:
+        """Sanitize string to be filesystem-safe."""
+        return re.sub(r"[^a-zA-Z0-9_\-]", "_", name).strip("_") or "default"
+
+    def _get_end(self, parts: list) -> str:
+        url_end = None
+
+        if self._is_valid_end(parts[-1]):
+            url_end = parts[-1]
+        else:
+            url_end = parts[-2]
+
+        return url_end
+
+    def _is_valid_end(self, end_url: str) -> bool:
+        URL_MOST_POP = "most-popular"
+        URL_TOP_RATED = "top-rated"
+
+        if (end_url != URL_MOST_POP) and (end_url != URL_TOP_RATED):
+            return True
+        return False

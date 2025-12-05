@@ -36,7 +36,7 @@ def test_create_directory_url_hits_name(mock_mkdir, handler):
 
 @patch("directory_handler.Path.mkdir")
 def test_create_directory_hits_name(mock_mkdir, handler):
-    url = "https://www.pornhits.com/video/525405/video-title/"
+    url = "https://www.hits.com/video/525405/video-title/"
     Parent = "Parent"
     result = handler.create_directory(parent_directory=Parent)
     assert "VIDEOS" in result.upper()
@@ -47,3 +47,12 @@ def test_create_directory_url_invalid(handler):
     url = "https://exmaple.com/"
     with pytest.raises(ValueError):
         handler.create_directory_url(url)
+
+@patch("directory_handler.Path.mkdir")
+def test_create_directory_hits_name(mock_mkdir, handler):
+    url = "https://www.freevideos.com/sites/my-friends/most-popular/"
+    Parent = "Parent"
+    result = handler.create_directory_url(url=url, parent_directory=Parent)
+    assert "MY-FRIENDS" in result.upper()
+    assert "PARENT" in result.upper()
+    mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
