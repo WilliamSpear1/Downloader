@@ -21,7 +21,7 @@ class DirectoryHandler:
             directory_name = params.get("ps", [None])[0] or params.get("spon", [None])[0]
         else:
             parts = parsed.path.rstrip("/").split("/")
-            directory_name = self._get_end(parts) + "/"
+            directory_name = self._get_end(parts)
 
         if not directory_name:
             logger.error(f"Cannot extract directory name from the URL")
@@ -68,7 +68,7 @@ class DirectoryHandler:
         else:
             url_end = parts[-2]
 
-        return url_end
+        return url_end + "/"
 
     def _is_valid_end(self, end_url: str) -> bool:
         URL_MOST_POP = "most-popular"
