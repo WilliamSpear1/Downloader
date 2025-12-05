@@ -29,9 +29,9 @@ class DirectoryHandler:
 
         # Create directory
         if parent_directory:
-            video_path = '/videos' + '/' + parent_directory + '/' + directory_name + '/'
+            video_path = '/vids' + '/' + parent_directory + '/' + directory_name + '/'
         else:
-            video_path = '/videos' + '/' + directory_name + '/'
+            video_path = '/vids' + '/' + directory_name + '/'
 
         os.makedirs(video_path, exist_ok=True)
         logger.info(f"Created directory: {video_path}")
