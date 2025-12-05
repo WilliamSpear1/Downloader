@@ -28,14 +28,17 @@ class DirectoryHandler:
             raise ValueError(f"Cannot extract directory name from URL: {url}")
 
         # Sanitize directory name
-        directory_name = self.safe_dir_name(directory_name)
+#        directory_name = self.safe_dir_name(directory_name)
 
         # Build path
-        parts = [p.upper() for p in (parent_directory, directory_name) if p]
-        video_path = Path("/videos").joinpath(*parts)
+#        parts = [p.upper() for p in (parent_directory, directory_name) if p]
+#        video_path = Path("/videos").joinpath(*parts)
 
         # Create directory
-        video_path.mkdir(parents=True, exist_ok=True)
+        #video_path.mkdir(parents=True, exist_ok=True)
+        path = "/videos/" + directory_name.upper() + "/"
+
+        os.makedirs(path, exist_ok=True)
         logger.info(f"Created directory: {video_path}")
 
         return str(video_path)
