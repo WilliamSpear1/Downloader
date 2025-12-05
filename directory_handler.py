@@ -36,9 +36,9 @@ class DirectoryHandler:
 
         # Create directory
         #video_path.mkdir(parents=True, exist_ok=True)
-        path = "/videos/" + directory_name.upper() + "/"
+        video_path = "/videos/" + directory_name.upper() + "/"
 
-        os.makedirs(path, exist_ok=True)
+        os.makedirs(video_path, exist_ok=True)
         logger.info(f"Created directory: {video_path}")
 
         return str(video_path)
