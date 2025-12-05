@@ -21,7 +21,7 @@ class DirectoryHandler:
             directory_name = params.get("ps", [None])[0] or params.get("spon", [None])[0]
         else:
             parts = parsed.path.rstrip("/").split("/")
-            directory_name = self._get_end(parts)
+            directory_name = self._get_end(parts) + "/"
 
         if not directory_name:
             logger.error(f"Cannot extract directory name from the URL")
@@ -38,6 +38,13 @@ class DirectoryHandler:
         video_path.mkdir(parents=True, exist_ok=True)
         logger.info(f"Created directory: {video_path}")
 
+        # Verify write permissions
+        test_file = video_path / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+
+        logger.info(f"✓ Created directory: {video_path}")
+        logger.info(f"✓ Permissions verified for: {video_path}")
         return str(video_path)
 
     @staticmethod
