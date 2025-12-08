@@ -38,6 +38,8 @@ class DirectoryHandler:
         # Create directory
         try:
             video_path.mkdir(parents=True, exist_ok=True)
+            logger.info(f"CMD: {os.getcwd()}/{video_path}")
+            logger.info(f"Target Path: {video_path.resolve()}")
             logger.info(f"Created directory: {video_path}")
         except (FileNotFoundError, PermissionError, OSError) as e:
             raise DirectoryCreationError(video_path, e)
