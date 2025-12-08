@@ -3,17 +3,16 @@ services:
   downloader:
     image: registry.spearmanwm.dev/downloader:latest
     container_name: downloader
+    env_file: .env
     volumes:
       - type: bind
-        source: /home/wspearman/Videos
-        target: /vids
+        source: C:\Users\spear\Downloads\Videos
+        target: /videos
     restart: unless-stopped
     ports:
       - 5000:5000
     # Optional - alternative address used for autodiscovery
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=America/New_York
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}

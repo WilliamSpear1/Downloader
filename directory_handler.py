@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+from DirectoryCreationError import DirectoryCreationError
 from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
@@ -27,14 +28,19 @@ class DirectoryHandler:
             logger.error(f"Cannot extract directory name from the URL")
             raise ValueError(f"Cannot extract directory name from URL: {url}")
 
-        # Create directory
-        if parent_directory:
-            video_path = '/vids' + '/' + parent_directory + '/' + directory_name + '/'
-        else:
-            video_path = '/vids' + '/' + directory_name + '/'
+        # Sanitize directory name
+        directory_name = self.safe_dir_name(directory_name)
 
-        os.makedirs(video_path, exist_ok=True)
-        logger.info(f"Created directory: {video_path}")
+        # Build path
+        parts = [p.upper() for p in (parent_directory, directory_name) if p]
+        video_path = Path("/videos").joinpath(*parts)
+
+        # Create directory
+        try:
+            video_path.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Created directory: {video_path}")
+        except (FileNotFoundError, PermissionError, OSError) as e:
+            raise DirectoryCreationError(video_path, e)
 
         return str(video_path)
 
