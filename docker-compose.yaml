@@ -4,10 +4,6 @@ services:
     image: registry.spearmanwm.dev/downloader:latest
     container_name: downloader
     env_file: .env
-    volumes:
-      - type: bind
-        source: C:\Users\spear\Downloads\Videos
-        target: /videos
     restart: unless-stopped
     ports:
       - 5000:5000
@@ -28,6 +24,10 @@ services:
   downloader-celery-worker:
     image: registry.spearmanwm.dev/downloader:latest
     container_name: celery_worker_downloader
+    volumes:
+      - type: bind
+        source: C:\Users\spear\Downloads\Videos
+        target: /videos
     command: celery -A tasks worker -Q downloader_queue --events -l info
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
