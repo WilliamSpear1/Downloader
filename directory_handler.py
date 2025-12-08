@@ -33,7 +33,7 @@ class DirectoryHandler:
 
         # Build path
         parts = [p.upper() for p in (parent_directory, directory_name) if p]
-        video_path = Path("/videos").joinpath(*parts)
+        video_path = Path("videos").joinpath(*parts)
 
         # Create directory
         try:
@@ -50,7 +50,7 @@ class DirectoryHandler:
     def create_directory(parent_directory: str | None = None) -> str:
         """Create a directory for a given url under /videos."""
         logger.info(f"Creating Directory for {parent_directory}")
-        path = Path("/videos").joinpath(parent_directory)
+        path = Path("videos").joinpath(parent_directory)
         path.mkdir(parents=True, exist_ok=True)
         return str(path)
 
