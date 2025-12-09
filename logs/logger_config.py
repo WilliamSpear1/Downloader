@@ -8,7 +8,7 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
 #Ensure the logs directory exists
-Path("logs").mkdir(parents=True, exist_ok=True)
+Path("/var/log/downloader").mkdir(parents=True, exist_ok=True)
 
 LOGGING_CONFIG = {
     "version": 1,
