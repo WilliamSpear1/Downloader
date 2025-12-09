@@ -1,6 +1,3 @@
-import sys
-import traceback
-
 
 class DirectoryCreationError(Exception):
     def __init__(self, video_path, error):
