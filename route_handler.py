@@ -29,7 +29,7 @@ class RouteHandler:
         for key, value in website_names.items():
             if value in url:
                 if key == "hits":
-                    self._task_id = self.handle_hits(url)
+                    self._task_id = self.handle_hits(url, number_of_pages)
                     break
                 elif key == "free":
                     self._task_id = self.handle_free(url, parent_directory, number_of_pages)
@@ -42,15 +42,16 @@ class RouteHandler:
         task = run_browser.delay(url, number_of_pages, parent_directory)
         return str(task.id)
 
-    def handle_hits(self, fetch_url:str) -> str:
+    def handle_hits(self, fetch_url:str, number_of_pages:int = 0) -> str:
         url_processor = self.properties.get_processor_url()
 
         logger.info(f"URL: {fetch_url}")
         logger.info(f"URL PROCESSOR: {url_processor}")
 
+        logger.info("Sending off data to URL Processor.")
         response = requests.post(
             url_processor,
-            json={"url": fetch_url}
+            json={"url": fetch_url, "number_of_pages": number_of_pages}
         )
         response.raise_for_status()
         data = response.json()
