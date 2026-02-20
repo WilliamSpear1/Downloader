@@ -1,24 +1,23 @@
-def dockerImage
 pipeline {
     agent any
 
     environment {
         REGISTRY = 'registry.spearmanwm.dev'
         IMAGE_NAME = 'downloader'
-        HOME = '${WORKSPACE}'
     }
 
     stages {
-        stage('clone') {
+        stage('checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHubCredentials', url: 'https://github.com/WilliamSpear1/Downloader.git']])
+               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GithubJenkins2', url: 'https://github.com/WilliamSpear1/Downloader.git']])
             }
         }
 
         stage('build docker image') {
             steps {
                 script {
-                    dockerImage = docker.build("${REGISTRY}/${IMAGE_NAME}:latest")
+                    echo "Building Docker Image: ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
+                    sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} ."
                 }
             }
         }
@@ -26,17 +25,10 @@ pipeline {
         stage('push to private registry') {
             steps {
                 script {
-                   docker.withRegistry("https://registry.spearmanwm.dev") {
-                        dockerImage.push()
+                   docker.withRegistry("https://${REGISTRY}") {
+                        sh "docker push ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
                     }
                 }
-            }
-        }
-    }
-    post {
-        always {
-            script{
-                cleanWs()
             }
         }
     }
