@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker Image: ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
-                    sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} ."
+                    sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} -t ${REGISTRY}/${IMAGE_NAME}:latest."
                 }
             }
         }
@@ -27,6 +27,7 @@ pipeline {
                 script {
                    docker.withRegistry("https://${REGISTRY}") {
                         sh "docker push ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${REGISTRY}/${IMAGE_NAME}:latest"
                     }
                 }
             }
