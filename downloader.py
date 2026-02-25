@@ -8,7 +8,7 @@ from data.video import Video
 logger = setup_logging(__name__)
 
 class Downloader:
-    def skip_short_videos(self, info_dict, incomplete):
+    def skip_short_videos(info_dict, incomplete):
         duration = info_dict.get("duration")
         if duration is not None and duration < 20 * 60:  # 20 mins in seconds
             logger.info(f"Video too short: {duration / 60:.1f} minutes")
