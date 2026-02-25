@@ -24,12 +24,13 @@ def download() -> Response:
     # Form Data
     url = request.form.get("url")
     parent_directory = request.form.get("parent_directory")
-    number_of_pages = int(request.form.get("number_of_pages") or 0)
+    number_of_pages = int(request.form.get("number_of_pages") or 1)
 
     task_id = route_handler.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
 
     if 'hits' in url:
+        logger.debug("URL contains 'hits', skipping task monitoring.")
         check_task(task_id, parent_directory, url)
 
     return redirect(url_for("index"))

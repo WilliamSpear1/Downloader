@@ -2,13 +2,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from celery_app import celery_app
+from conf.logger_config import setup_logging
 from directory_handler import DirectoryHandler
 from downloader import Downloader
 from chrome_driver_factory import ChromeDriver
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
-from logs.logger_config import setup_logging
 from scarper import Scarper
 
 logger = setup_logging(__name__)
