@@ -1,7 +1,8 @@
 services:
   # Url Processor Container
   downloader:
-    image: registry.spearmanwm.dev/downloader:latest
+    build: .
+    image: downloader:dev
     container_name: downloader
     env_file: .env
     restart: unless-stopped
@@ -18,11 +19,13 @@ services:
       - URL_PROCESSOR=${URL_PROCESSOR}
       - CHECK_URL=${CHECK_URL}
       - UPLOAD_URL=${UPLOAD_URL}
+      - ENVIRONMENT=${ENVIRONMENT}
     networks:
       - app-net
   # Celery Worker Container
   downloader-celery-worker:
-    image: registry.spearmanwm.dev/downloader:latest
+    build: .
+    image: downloader:dev
     container_name: celery_worker_downloader
     volumes:
       - type: bind
@@ -32,6 +35,7 @@ services:
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - ENVIRONMENT=${ENVIRONMENT}
     depends_on:
       - downloader
 

@@ -2,7 +2,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
-from logs.logger_config import setup_logging
+from conf.logger_config import setup_logging
 from data.video import Video
 
 logger = setup_logging(__name__)

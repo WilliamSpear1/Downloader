@@ -3,8 +3,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+from conf.logger_config import setup_logging
 from directory_creation_error import DirectoryCreationError
-from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 

@@ -3,15 +3,17 @@ import time
 
 import requests
 
+from conf.logger_config import setup_logging
 from data.video import Video
 from directory_handler import DirectoryHandler
 from downloader import Downloader
-from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
 class Monitor:
-    def __init__(self, task_id: str, check_url: str, parent_directory: str="", interval: int=10):
+    MAX_RETRIES = 5
+
+    def __init__(self, task_id: str, check_url: str, parent_directory: str="", interval: int=30):
         self._task_id = task_id
         self._check_url = check_url
         self._parent_directory = parent_directory
@@ -22,7 +24,7 @@ class Monitor:
         directory_handler = DirectoryHandler()
         status = None
 
-        while status is None:
+        for _ in range(self.MAX_RETRIES):
             status = self.monitor_task()
 
             if status is None:
@@ -49,7 +51,7 @@ class Monitor:
         try:
             response = requests.get(
                 f"{self._check_url}/{self._task_id}",
-                timeout=5
+                timeout=30
             )
             response.raise_for_status()
             data = response.json()

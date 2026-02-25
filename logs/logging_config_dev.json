@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "default": {
+      "format": "[%(asctime)s] [%(levelname)s] [PID:%(process)d] [TID:%(thread)d] %(name)s: %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    }
+  },
+  "handlers": {
+    "console_handler": {
+      "class": "logging.StreamHandler",
+      "formatter": "default",
+      "level": "DEBUG"
+    },
+    "file_handler": {
+      "class": "logging.handlers.TimedRotatingFileHandler",
+      "formatter": "default",
+      "filename": "downloader.logs",
+      "when": "midnight",
+      "backupCount": 3,
+      "level": "DEBUG"
+    }
+  },
+  "loggers": {
+    "": {
+      "handlers": ["console_handler", "file_handler"],
+      "level": "DEBUG"
+    }
+  }
+}

@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from logs.logger_config import setup_logging
+from conf.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
