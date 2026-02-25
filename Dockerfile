@@ -1,14 +1,12 @@
 # =========================
 # Dockerfile for Flask + Celery + Selenium/Chrome
 # =========================
+FROM python:3.11-slim AS builder
 
-FROM python:3.11-slim
+WORKDIR /build
 
 # Install runtime dependencies + Chromium for Selenium
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget \
-    gnupg \
-    ca-certificates \
     unzip \
     libglib2.0-0 \
     libnss3 \
@@ -31,23 +29,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgtk-3-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# Upgrade pip and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+
+FROM python:3.11-slim AS runtime
+
 WORKDIR /app
 
 # Install Chrome pulled from this stackoverflow thread:https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    gnupg \
+    ca-certificates && \
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . /app
+# 4. Copy wheels from builder and install
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
+
+COPY . .
 
 # Expose Flask port
 EXPOSE 5000
