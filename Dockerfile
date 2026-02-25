@@ -7,6 +7,8 @@ FROM python:3.11-slim
 # Install runtime dependencies + Chromium for Selenium
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
+    gnupg \
+    ca-certificates \
     unzip \
     libglib2.0-0 \
     libnss3 \
