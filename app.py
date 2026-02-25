@@ -4,10 +4,10 @@ from subprocess import check_call
 
 from flask import Blueprint, render_template, request, url_for, redirect, Response, Flask, jsonify
 
+from conf.logger_config import setup_logging
 from monitor import Monitor
 from properties import Properties
 from route_handler import RouteHandler
-from logs.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 app = Flask( __name__)
