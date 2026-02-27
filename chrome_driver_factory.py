@@ -19,9 +19,15 @@ class ChromeDriver:
     def browser(self) -> WebDriver:
         options = Options()
 
-        options.add_argument("--headless=new")
+        options.add_argument("--headless=new")  # modern headless mode
         options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-dev-shm-usage")  # prevent /dev/shm size issues
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-quic") # Disable QUIC(UDP) to force standard TCP which the proxy can handle
+        options.add_argument("--proxy-bypass-list=<-loopback>")  # Bypass proxy for localhost
+        options.add_argument('--disable-http2')  # Disable HTTP/2 to prevent issues with Selenium Wire's MITM proxy
+        options.add_argument('--disable-software-rasterizer')  # Disable software rasterizer to prevent GPU-related issues in headless mode
+        options.add_argument('--mute-audio')  # Mute audio to prevent potential issues with audio processing in headless mode
 
         driver = webdriver.Chrome(options=options)
         driver.get(self.url)
