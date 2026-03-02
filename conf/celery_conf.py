@@ -11,3 +11,7 @@ class Config:
     enable_utc = True
     worker_prefetch_multiplier = 1
     task_acks_late = True
+    broker_transport_options = {
+        'x-message-ttl': 60000, # message expires after 60 seconds
+        'x-max-length': 1000 # max 1000 messages in the queue
+    }
