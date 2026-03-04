@@ -5,7 +5,7 @@ from yt_dlp import YoutubeDL
 from conf.logger_config import setup_logging
 from data.video import Video
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class Downloader:
     def skip_short_videos(info_dict, incomplete):

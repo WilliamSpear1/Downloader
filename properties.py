@@ -1,9 +1,10 @@
 import configparser
+import logging
 import os
 
 from conf.logger_config import setup_logging
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class Properties:
     def __init__(self):

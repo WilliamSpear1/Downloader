@@ -1,3 +1,5 @@
+import logging
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -11,7 +13,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from scarper import Scarper
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 @celery_app.task(name="tasks.run_browser")
 def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:

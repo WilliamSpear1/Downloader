@@ -1,10 +1,11 @@
+import logging
 import re
 from enum import nonmember
 from typing import Optional
 
 from conf.logger_config import setup_logging
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class Video:
     def __init__(self, title: str = "", link: str = "", path = "") -> None:

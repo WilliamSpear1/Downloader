@@ -1,3 +1,4 @@
+import logging
 import threading
 
 import requests
@@ -8,7 +9,7 @@ from properties import Properties
 from scarper import Scarper
 from tasks import run_browser
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class RouteHandler:
     def __init__(self, properties: Properties):

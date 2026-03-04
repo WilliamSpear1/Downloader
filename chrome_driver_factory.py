@@ -1,3 +1,5 @@
+import logging
+
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
@@ -6,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from conf.logger_config import setup_logging
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class ChromeDriver:
     def __init__(self, url:str) -> None:

@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from pathlib import Path
@@ -6,7 +7,7 @@ from urllib.parse import urlparse, parse_qs
 from conf.logger_config import setup_logging
 from directory_creation_error import DirectoryCreationError
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class DirectoryHandler:
 

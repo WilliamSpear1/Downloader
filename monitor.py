@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -8,7 +9,7 @@ from data.video import Video
 from directory_handler import DirectoryHandler
 from downloader import Downloader
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
 class Monitor:
     MAX_RETRIES = 5
