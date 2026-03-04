@@ -31,7 +31,8 @@ class ChromeDriver:
         options.add_argument('--disable-software-rasterizer')  # Disable software rasterizer to prevent GPU-related issues in headless mode
         options.add_argument('--mute-audio')  # Mute audio to prevent potential issues with audio processing in headless mode
 
-        driver = webdriver.Chrome(options=options)
+        service = Service(log_path="/app/logs/chromedriver.log", service_args=["--verbose"])
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get(self.url)
         return driver
 
