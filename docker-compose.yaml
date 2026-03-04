@@ -20,6 +20,8 @@ services:
       - CHECK_URL=${CHECK_URL}
       - UPLOAD_URL=${UPLOAD_URL}
       - ENVIRONMENT=${ENVIRONMENT}
+    volumes:
+      - C:\Users\spear\Downloads\Videos:/videos
     networks:
       - app-net
   # Celery Worker Container
@@ -27,10 +29,6 @@ services:
     build: .
     image: downloader:dev
     container_name: celery_worker_downloader
-    volumes:
-      - type: bind
-        source: C:\Users\spear\Downloads\Videos
-        target: /videos
     command: celery -A tasks worker -Q downloader_queue --events -l info
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
