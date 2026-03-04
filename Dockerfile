@@ -56,13 +56,15 @@ RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 COPY . .
 
 # Create a non-root user to run the application
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-
-# Change ownership of the app directory to the non-root user
-RUN chown -R appuser:appuser /app
+RUN groupadd -r appuser && \
+    useradd -r -g appuser appuser && \
+    chown -R appuser:appuser /app && \
+    mkdir -p /home/appuser/.cache home/appuser/.local /home/appuser/.config && \
+    chown -R appuser:appuser /home/appuser
 
 # Switch to the non-root user
 USER appuser
+ENV HOME=/home/appuser
 
 # Expose Flask port
 EXPOSE 5000
