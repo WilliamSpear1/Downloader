@@ -1,7 +1,7 @@
 # =========================
 # Dockerfile for Flask + Celery + Selenium/Chrome
 # =========================
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
@@ -34,7 +34,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
-FROM python:3.11-slim AS runtime
+FROM python:3.12-slim AS runtime
 
 WORKDIR /app
 
@@ -49,12 +49,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-
 # 4. Copy wheels from builder and install
 COPY --from=builder /wheels /wheels
 RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
 COPY . .
+
+# Create a non-root user to run the application
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Change ownership of the app directory to the non-root user
+RUN chown -R appuser:appuser /app
+
+# Switch to the non-root user
+USER appuser
 
 # Expose Flask port
 EXPOSE 5000
