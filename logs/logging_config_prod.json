@@ -4,7 +4,7 @@
   "formatters": {
     "default": {
       "format": "[%(asctime)s] [%(levelname)s] [PID:%(process)d] [TID:%(thread)d] %(name)s: %(message)s",
-      "datefmt": "%Y-%m-%d %H:%M:%S"
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
     }
   },
   "handlers": {
@@ -14,18 +14,26 @@
       "level": "INFO"
     },
     "file_handler": {
-      "class": "logging.handlers.TimedRotatingFileHandler",
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
       "formatter": "default",
-      "filename": "downloader.logs",
-      "when": "midnight",
-      "backupCount": 3,
-      "level": "INFO"
+      "filename": "/app/log/downloader.logs",
+      "maxBytes": 10485760,
+      "backupCount": 3
+    },
+    "queue_handler": {
+      "class": "logging.handlers.QueueHandler",
+      "handlers": [
+        "console_handler",
+        "file_handler"
+      ],
+      "respect_handler_level": true
     }
   },
   "loggers": {
-    "": {
-      "handlers": ["console_handler", "file_handler"],
-      "level": "INFO"
+    "root": {
+      "level": "INFO",
+      "handlers": ["queue_handler"]
     }
   }
 }
