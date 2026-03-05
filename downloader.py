@@ -18,7 +18,7 @@ class Downloader:
             self.download_video(video, opts)
         return None
 
-    def download_video(self, video:Video, opts) -> None:
+    def download_video(self, video:Video, opts:Any) -> None:
         video_path = f"{video.path}/{video.title}"
 
         opts['outtmpl'] = video_path + ".%(ext)s"
