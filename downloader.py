@@ -1,4 +1,7 @@
+import json
 import logging
+from typing import Any
+
 from yt_dlp.utils import DownloadError
 from yt_dlp import YoutubeDL
 from data.video import Video
@@ -6,64 +9,22 @@ from data.video import Video
 logger = logging.getLogger(__name__)
 
 class Downloader:
-    def skip_short_videos(info_dict, incomplete):
-        duration = info_dict.get("duration")
-        if duration is not None and duration < 20 * 60:  # 20 mins in seconds
-            logger.info(f"Video too short: {duration / 60:.1f} minutes")
-            return f"Video too short: {duration / 60:.1f} minutes"
-        return None  # Accept the video
-
-    ydl_opts = {
-        # General Settings
-        'quiet': True,
-        'ignoreerrors': True,
-        'no_abort_on_error': True,
-        'nooverwrites': True,
-        'ratelimit': 500000,  # ~5 MB/s
-        'downloader': 'ffmpeg',
-        'hls_use_mpegts': True,
-        'check_formats': True,
-        'extractor_args': {
-            'youtube': {
-                "player_client": ['android', 'web'],
-                'skip': ['dash', 'hls']  # Skip DASH formats that often cause issues
-            }
-        },
-
-         # Stop if a fragment is missing
-        'abort_on_unavailable_fragments': False,
-        'format': (
-            'bestvideo[height>=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/'
-            'best[height>=720][ext=mp4]/'
-            'best[height>=720]'
-        ),
-        'retries': 10,                                 # number of times to retry the whole download
-        'fragment_retries': 20,                 # retries per fragment
-        'retry_streams': 5,                        # retry the whole stream if fragments fail
-        'socket_timeout': 60,                    # increase timeout to handle slow fragments
-        "match_filter": skip_short_videos, # 1200 seconds = 20 mins
-        'merge_output_format': 'mp4',      # Merge video and audio into mp4 container
-        'force-write-archive': True,                 # Force writing the archive file to prevent duplicates
-        'simulate': False,                          # Set to True for testing without downloading
-        'download_archive': '/app/log/downloaded_videos.txt'  # Keep track of downloaded videos to avoid duplicates
-    }
-
     def download_videos(self, videos:list) -> None:
         logger.info(f"The Number of videos set for downloading: {len(videos)}")
-        for video in videos:
-            self.download_video(video)
+        opts = self.safe_load_opts()
+        opts['match_filter'] = self.skip_short_videos #Filter out videos shorter than 20 minutes
 
-    def download_video(self, video:Video) -> None:
+        for video in videos:
+            self.download_video(video, opts)
+        return None
+
+    def download_video(self, video:Video, opts) -> None:
         video_path = f"{video.path}/{video.title}"
 
-        opts = self.ydl_opts.copy()
         opts['outtmpl'] = video_path + ".%(ext)s"
 
         with YoutubeDL(opts) as ydl:
-            # Extract info *without downloading* to see available formats
             try:
-                # probe metadata
-                # safe to download
                 logger.info(f"Downloading {video.title}")
                 result = ydl.download([video.link])
 
@@ -74,3 +35,25 @@ class Downloader:
             except Exception as e:
                 logger.error(f"Skipping {video.title}: Crash Report: ({e})")
             return None
+
+    def skip_short_videos(self, info_dict, *, incomplete) -> str|None:
+        duration = info_dict.get("duration")
+
+        if incomplete and duration is None:
+            logger.warning("Video is incomplete and duration is unknown. Skipping.")
+            return None
+
+        if duration is not None and duration < 20 * 60:  # 20 mins in seconds
+            logger.info(f"Video too short: {duration / 60:.1f} minutes")
+            return f"Video too short: {duration / 60:.1f} minutes"
+        return None  # Accept the video
+
+    def safe_load_opts(self) -> Any:
+        try:
+            with open("yt_dlp.json", "r") as file:
+                opts = json.load(file)
+                logger.info("Loaded yt_dlp options from yt_dlp_opts.json")
+                return opts
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.warning(f"Could not load yt_dlp options: {e}. Using default options.")
+            return {}
