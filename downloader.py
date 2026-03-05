@@ -1,8 +1,6 @@
 import logging
-
+from yt_dlp.utils import DownloadError
 from yt_dlp import YoutubeDL
-
-from conf.logger_config import setup_logging
 from data.video import Video
 
 logger = logging.getLogger(__name__)
@@ -18,11 +16,19 @@ class Downloader:
     ydl_opts = {
         # General Settings
         'quiet': True,
-        'ignoreerrors': False,
+        'ignoreerrors': True,
+        'no_abort_on_error': True,
         'nooverwrites': True,
         'ratelimit': 500000,  # ~5 MB/s
         'downloader': 'ffmpeg',
         'hls_use_mpegts': True,
+        'check_formats': True,
+        'extractor_args': {
+            'youtube': {
+                "player_client": ['android', 'web'],
+                'skip': ['dash', 'hls']  # Skip DASH formats that often cause issues
+            }
+        },
 
          # Stop if a fragment is missing
         'abort_on_unavailable_fragments': False,
@@ -35,8 +41,11 @@ class Downloader:
         'fragment_retries': 20,                 # retries per fragment
         'retry_streams': 5,                        # retry the whole stream if fragments fail
         'socket_timeout': 60,                    # increase timeout to handle slow fragments
-       "match_filter": skip_short_videos, # 1200 seconds = 20 mins
-        'merge_output_format': 'mp4'      # Merge video and audio into mp4 container
+        "match_filter": skip_short_videos, # 1200 seconds = 20 mins
+        'merge_output_format': 'mp4',      # Merge video and audio into mp4 container
+        'force-write-archive': True,                 # Force writing the archive file to prevent duplicates
+        'simulate': False,                          # Set to True for testing without downloading
+        'download_archive': '/app/log/downloaded_videos.txt'  # Keep track of downloaded videos to avoid duplicates
     }
 
     def download_videos(self, videos:list) -> None:
@@ -45,7 +54,7 @@ class Downloader:
             self.download_video(video)
 
     def download_video(self, video:Video) -> None:
-        video_path = video.path + "/" + video.title
+        video_path = f"{video.path}/{video.title}"
 
         opts = self.ydl_opts.copy()
         opts['outtmpl'] = video_path + ".%(ext)s"
@@ -54,24 +63,14 @@ class Downloader:
             # Extract info *without downloading* to see available formats
             try:
                 # probe metadata
-                info = ydl.extract_info(video.link, download=False)
+                # safe to download
+                logger.info(f"Downloading {video.title}")
+                result = ydl.download([video.link])
+
+                if result != 0:
+                    logger.warning(f"Skipping {video.title}: download failed with code {result}")
+            except DownloadError as e:
+                logger.warning(f"Skipping {video.title}: {e}")
             except Exception as e:
-                logger.warning(f"Skipping {video.title}: failed to extract info ({e})")
-                return None
-
-            if not info or 'formats' not in info:
-                logger.warning(f"Skipping {video.title}: no formats available")
-                return None
-
-            # check if our selector finds a match
-            selector = ydl.build_format_selector(opts['format'])
-            chosen = selector(info)
-
-            if not chosen:
-                logger.warning(f"Skipping {video.title}: no format matched {opts['format']}")
-                return None
-
-            # safe to download
-            logger.info(f"Downloading {video.title}")
-            ydl.download([video.link])
+                logger.error(f"Skipping {video.title}: Crash Report: ({e})")
             return None
