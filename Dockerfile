@@ -35,6 +35,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 FROM python:3.12-slim AS runtime
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 
 WORKDIR /app
 
@@ -56,10 +58,10 @@ RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 COPY . .
 
 # Create a non-root user to run the application
-RUN groupadd -r appuser && \
-    useradd -r -g appuser appuser && \
+RUN groupadd -g ${GROUP_ID} appuser && \
+    useradd -l -u ${USER_ID} -g appuser -m appuser && \
     chown -R appuser:appuser /app && \
-    mkdir -p /home/appuser/.cache home/appuser/.local /home/appuser/.config && \
+    mkdir -p /home/appuser/.cache /home/appuser/.local /home/appuser/.config && \
     chown -R appuser:appuser /home/appuser
 
 # Switch to the non-root user

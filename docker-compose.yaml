@@ -1,8 +1,10 @@
 services:
-  # Url Processor Container
+  # Downloader Container
   downloader:
-    build: .
+    build:
+      context: .
     image: downloader:dev
+    user: "1000:1000"
     container_name: downloader
     env_file: .env
     restart: unless-stopped
@@ -21,15 +23,22 @@ services:
       - UPLOAD_URL=${UPLOAD_URL}
       - ENVIRONMENT=${ENVIRONMENT}
     volumes:
-      - C:\Users\spear\Downloads\Videos:/videos
+      - C:\Users\spear\Videos:/app/videos
+      - C:\Users\spear\Logs:/app/log/
     networks:
       - app-net
+
   # Celery Worker Container
   downloader-celery-worker:
-    build: .
+    build:
+      context: .
     image: downloader:dev
+    user: "1000:1000"
     container_name: celery_worker_downloader
-    command: celery -A tasks worker -Q downloader_queue --events -l info
+    command: celery -A tasks worker -Q downloader_queue -l info --events
+    volumes:
+      - C:\Users\spear\Videos:/app/videos
+      - C:\Users\spear\Logs:/app/log/
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
