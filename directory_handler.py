@@ -34,7 +34,7 @@ class DirectoryHandler:
 
         # Build path
         parts = [p.upper() for p in (parent_directory, directory_name) if p]
-        video_path = Path("videos").joinpath(*parts)
+        video_path = Path("./videos").joinpath(*parts)
 
         # Create directory
         try:
