@@ -8,9 +8,11 @@ from conf.logger_config import setup_logging
 from monitor import Monitor
 from properties import Properties
 from route_handler import RouteHandler
+from flask_cors import CORS
 
 logger = setup_logging(__name__)
 app = Flask( __name__)
+CORS(app)
 
 @app.route("/")
 def index() -> str:
@@ -18,13 +20,16 @@ def index() -> str:
     return render_template("index.html")
 
 @app.route("/download", methods=['POST'])
-def download() -> Response:
+def download() -> tuple[Response, int]:
     route_handler = RouteHandler(Properties())
 
     # Form Data
-    url = request.form.get("url")
-    parent_directory = request.form.get("parent_directory")
-    number_of_pages = int(request.form.get("number_of_pages") or 1)
+    url = request.json.get("url")
+    parent_directory = request.json.get("parent_directory")
+    number_of_pages = int(request.json.get("number_of_pages") or 1)
+
+    if url is None:
+        return jsonify({"error": "url required"}), 400
 
     task_id = route_handler.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
@@ -33,7 +38,7 @@ def download() -> Response:
         logger.debug("URL contains 'hits', skipping task monitoring.")
         check_task(task_id, parent_directory, url)
 
-    return redirect(url_for("index"))
+    return jsonify({"status": "success"}), 202
 
 @app.route("/upload", methods=['POST'])
 def upload() -> tuple[Response, int]:
