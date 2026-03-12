@@ -60,6 +60,7 @@ COPY . .
 # Create a non-root user to run the application
 RUN groupadd -g ${GROUP_ID} appuser && \
     useradd -l -u ${USER_ID} -g appuser -m appuser && \
+    mkdir -p /app/log && \
     chown -R appuser:appuser /app && \
     mkdir -p /home/appuser/.cache /home/appuser/.local /home/appuser/.config && \
     chown -R appuser:appuser /home/appuser
