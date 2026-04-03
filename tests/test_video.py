@@ -40,9 +40,9 @@ class TestVideo:
         assert video.title ==  "[Sharon, SandraPaola]MOVESFORTHEGUY"
 
     def test_init_single_array(self):
-        title = "Kay Lovely's Creamy Snatch"
+        title = "Kay Lovely's Snack"
         link = "https://free.com/videos"
 
         video = Video(title, link)
 
-        assert video.title == "KayLovely'sCreamySnatch"
+        assert video.title == "KayLovely'sSnack"
