@@ -66,5 +66,5 @@ def check_task(task_id:str,parent_directory,url:str="") -> None:
 
     check_url = properties.get_check_url()
     monitor = Monitor(task_id, check_url)
-    thread = threading.Thread(target=monitor.probe, args=(parent_directory,url), daemon=True)
+    thread = threading.Thread(target=monitor.probe, args=url, daemon=True)
     thread.start()
