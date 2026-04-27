@@ -50,15 +50,6 @@ class Properties:
 
         return self._url
 
-    def get_upload_url(self) -> str:
-        url = os.environ.get('UPLOAD_URL')
-        logger.info(f"URL: {url}")
-        self._url = url
-
-        logger.info(f"URL: {self._url}")
-
-        return self._url
-
     def get_check_url(self):
         url = os.environ.get('CHECK_URL')
         logger.info(f"URL: {url}")

@@ -60,22 +60,3 @@ class RouteHandler:
 
         logger.info(f"Task Id from URL Processor: {task_id}")
         return task_id
-
-    def handle_upload(self, uploaded_file: FileStorage) -> str:
-        upload_url = self.properties.get_upload_url()
-
-        logger.info(f"UPLOAD URL: {upload_url}")
-        files = {"file": (uploaded_file.filename, uploaded_file.stream)}
-
-        logger.info("Sending off file")
-        response = requests.post(upload_url, files=files)
-
-        response.raise_for_status()
-        data = response.json()
-
-        if "task_id" not in data:
-            raise ValueError("Response JSON does not contain 'task_id'")
-        task_id = data['task_id']
-
-        logger.info(f"Task Id from UPLOAD URL: {task_id}")
-        return task_id

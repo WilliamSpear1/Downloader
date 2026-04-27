@@ -29,32 +29,11 @@ def download() -> tuple[Response, int]:
 
     if 'hits' in url:
         logger.debug("URL contains 'hits', skipping task monitoring.")
-        check_task(task_id, parent_directory, url)
+        check_task(task_id, url)
 
     return jsonify({"status": "success"}), 202
 
-@app.route("/upload", methods=['POST'])
-def upload() -> tuple[Response, int]:
-    route_handler = RouteHandler(Properties())
-
-    logger.info("Here in File Upload");
-
-    uploaded_file = request.files["file"]
-    parent_directory = request.form.get("parent_directory")
-
-    if not uploaded_file:
-        return jsonify({"error": "file_path required"}), 400
-    if not parent_directory:
-        return jsonify({"error": "parent_directory required"}), 400
-
-    task_id = route_handler.handle_upload(uploaded_file)
-    logger.info(f"Task Id In Flask Route: {task_id}")
-
-    check_task(task_id,parent_directory)
-
-    return jsonify({"task_id": task_id, "status": "processing"}), 202
-
-def check_task(task_id:str,parent_directory,url:str="") -> None:
+def check_task(task_id:str,url:str="") -> None:
     properties = Properties()
 
     check_url = properties.get_check_url()
