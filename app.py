@@ -3,9 +3,9 @@ import threading
 from flask import Flask, Response, request, jsonify
 
 from src.configuration.logger_config import setup_logging
-from monitor import Monitor
+from src.service.monitor_service import MonitorService
 from properties import Properties
-from route_handler import RouteHandler
+from src.service.route_service import RouteService
 from flask_cors import CORS
 
 logger = setup_logging(__name__)
@@ -14,7 +14,7 @@ CORS(app)
 
 @app.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:
-    route_handler = RouteHandler(Properties())
+    route_handler = RouteService(Properties())
 
     # Form Data
     url = request.json.get("url")
@@ -37,6 +37,6 @@ def check_task(task_id:str,url:str="") -> None:
     properties = Properties()
 
     check_url = properties.get_check_url()
-    monitor = Monitor(task_id, check_url)
+    monitor = MonitorService(task_id, check_url)
     thread = threading.Thread(target=monitor.probe, args=(url,), daemon=True)
     thread.start()

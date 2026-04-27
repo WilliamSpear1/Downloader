@@ -8,7 +8,7 @@ from src.model.video import Video
 
 logger = logging.getLogger(__name__)
 
-class Downloader:
+class DownloaderService:
     def download_videos(self, videos:list) -> None:
         logger.info(f"The Number of videos set for downloading: {len(videos)}")
         opts = self.safe_load_opts()
@@ -50,7 +50,7 @@ class Downloader:
 
     def safe_load_opts(self) -> Any:
         try:
-            with open("src/configuration/yt_dlp.json", "r") as file:
+            with open("../configuration/yt_dlp.json", "r") as file:
                 opts = json.load(file)
                 logger.info("Loaded yt_dlp options from yt_dlp_opts.json")
                 return opts

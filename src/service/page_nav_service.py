@@ -4,27 +4,27 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from src.configuration.celery_app import celery_app
-from directory_handler import DirectoryHandler
-from downloader import Downloader
+from src.service.directory_service import DirectoryService
+from src.service.downloader_service import DownloaderService
 from src.model.chrome_driver import ChromeDriver
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
-from scarper import Scarper
+from src.service.scraper import ScarperService
 
 logger = logging.getLogger(__name__)
 
-@celery_app.task(name="tasks.run_browser")
+@celery_app.task(name="page_nav_service.run_browser")
 def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:
     """Run the chrome driver, scrape videos across multiple pages, and download them."""
     chrome = ChromeDriver(url)
     driver = chrome.get_driver()
-    downloader = Downloader()
-    directory_handler = DirectoryHandler()
-    scarper = Scarper(url, number_of_pages, parent_directory)
+    downloader = DownloaderService()
+    directory_handler = DirectoryService()
+    scarper = ScarperService(url, number_of_pages, parent_directory)
 
     logger.info(f"Starting scrape -> {url}, Parent Dir: {parent_directory}")
-    path = directory_handler.create_directory_url(url, parent_directory)
+    path = directory_handler.create_directory(url, parent_directory)
 
     try:
         for page in range(1, number_of_pages + 1):

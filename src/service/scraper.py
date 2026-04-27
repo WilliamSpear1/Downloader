@@ -8,7 +8,7 @@ from src.model.video import Video
 
 logger = logging.getLogger(__name__)
 
-class Scarper:
+class ScarperService:
     def __init__(self, url: str, number_of__pages: int, parent_directory: str=""):
         self.url = url
         self.number_of_pages = number_of__pages

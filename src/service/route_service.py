@@ -4,11 +4,11 @@ import requests
 from werkzeug.datastructures import FileStorage
 
 from properties import Properties
-from tasks import run_browser
+from page_nav_service import run_browser
 
 logger = logging.getLogger(__name__)
 
-class RouteHandler:
+class RouteService:
     def __init__(self, properties: Properties):
         self._task_id = None
         self.properties = properties

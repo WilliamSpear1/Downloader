@@ -4,23 +4,22 @@ import time
 import requests
 
 from src.model.video import Video
-from directory_handler import DirectoryHandler
-from downloader import Downloader
+from src.service.directory_service import DirectoryService
+from src.service.downloader_service import DownloaderService
 
 logger = logging.getLogger(__name__)
 
-class Monitor:
+class MonitorService:
     MAX_RETRIES = 20
 
-    def __init__(self, task_id: str, check_url: str, parent_directory: str="", interval: int=60):
+    def __init__(self, task_id: str, check_url: str, interval: int=60):
         self._task_id = task_id
         self._check_url = check_url
-        self._parent_directory = parent_directory
         self._interval = interval
 
     def probe(self, url:str="") -> None:
-        downloader = Downloader()
-        directory_handler = DirectoryHandler()
+        downloader = DownloaderService()
+        directory_handler = DirectoryService()
         status = None
         videos = []
 
@@ -32,13 +31,8 @@ class Monitor:
             else:
                 break
 
-        logger.info("In Probe")
-        logger.info("Create Directory")
-
         if url:
-            path = directory_handler.create_directory_url(url, self._parent_directory)
-        else:
-            path = directory_handler.create_directory(self._parent_directory)
+            path = directory_handler.create_directory(url)
 
         if status is None:
             logger.warning(f"{self._task_id} failed monitoring timed out after {self.MAX_RETRIES} retries.")
