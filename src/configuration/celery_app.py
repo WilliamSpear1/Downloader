@@ -1,7 +1,6 @@
 from celery import Celery
-from celery.schedules import crontab
 
-from src.configuration.celery_conf import Config
+from .celery_conf import Config
 
 def make_celery_app():
     # Celery App initialization & configuration.

@@ -4,7 +4,7 @@ from typing import Any
 
 from yt_dlp.utils import DownloadError
 from yt_dlp import YoutubeDL
-from src.model.video import Video
+from ..model.video import Video
 
 logger = logging.getLogger(__name__)
 

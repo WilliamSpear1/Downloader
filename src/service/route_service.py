@@ -3,9 +3,9 @@ import threading
 
 import requests
 
-from src.configuration.properties import Properties
+from ..configuration.properties import Properties
 from page_nav_service import run_browser
-from src.service.monitor_service import MonitorService
+from .monitor_service import MonitorService
 
 logger = logging.getLogger(__name__)
 

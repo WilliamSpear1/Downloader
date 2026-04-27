@@ -3,9 +3,9 @@ import time
 
 import requests
 
-from src.model.video import Video
-from src.service.directory_service import DirectoryService
-from src.service.downloader_service import DownloaderService
+from ..model.video import Video
+from .directory_service import DirectoryService
+from .downloader_service import DownloaderService
 
 logger = logging.getLogger(__name__)
 

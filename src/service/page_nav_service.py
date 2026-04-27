@@ -3,14 +3,14 @@ import logging
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from src.configuration.celery_app import celery_app
-from src.service.directory_service import DirectoryService
-from src.service.downloader_service import DownloaderService
-from src.model.chrome_driver import ChromeDriver
+from ..configuration.celery_app import celery_app
+from .directory_service import DirectoryService
+from .downloader_service import DownloaderService
+from ..model.chrome_driver import ChromeDriver
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
-from src.service.scraper import ScarperService
+from .scraper import ScarperService
 
 logger = logging.getLogger(__name__)
 
