@@ -50,7 +50,7 @@ class Downloader:
 
     def safe_load_opts(self) -> Any:
         try:
-            with open("yt_dlp.json", "r") as file:
+            with open("src/configuration/yt_dlp.json", "r") as file:
                 opts = json.load(file)
                 logger.info("Loaded yt_dlp options from yt_dlp_opts.json")
                 return opts

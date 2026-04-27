@@ -3,7 +3,6 @@ import time
 
 import requests
 
-from conf.logger_config import setup_logging
 from data.video import Video
 from directory_handler import DirectoryHandler
 from downloader import Downloader

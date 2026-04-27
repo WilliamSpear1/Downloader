@@ -1,9 +1,5 @@
 import logging
 import re
-from enum import nonmember
-from typing import Optional
-
-from conf.logger_config import setup_logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,12 +1,9 @@
 import logging
-import threading
 
 import requests
 from werkzeug.datastructures import FileStorage
 
-from conf.logger_config import setup_logging
 from properties import Properties
-from scarper import Scarper
 from tasks import run_browser
 
 logger = logging.getLogger(__name__)

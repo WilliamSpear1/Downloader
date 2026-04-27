@@ -1,10 +1,8 @@
-import os
 import threading
-from subprocess import check_call
 
-from flask import Blueprint, render_template, request, url_for, redirect, Response, Flask, jsonify
+from flask import Flask, Response, request, jsonify
 
-from conf.logger_config import setup_logging
+from src.configuration.logger_config import setup_logging
 from monitor import Monitor
 from properties import Properties
 from route_handler import RouteHandler
@@ -13,11 +11,6 @@ from flask_cors import CORS
 logger = setup_logging(__name__)
 app = Flask( __name__)
 CORS(app)
-
-@app.route("/")
-def index() -> str:
-    logger.info("Rendering index page.")
-    return render_template("index.html")
 
 @app.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:

@@ -1,8 +1,5 @@
-import configparser
 import logging
 import os
-
-from conf.logger_config import setup_logging
 
 logger = logging.getLogger(__name__)
 

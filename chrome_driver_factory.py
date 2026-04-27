@@ -6,8 +6,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from conf.logger_config import setup_logging
-
 logger = logging.getLogger(__name__)
 
 class ChromeDriver:
