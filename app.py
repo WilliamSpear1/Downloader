@@ -10,7 +10,7 @@ CORS(app)
 
 @app.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:
-    route_handler = RouteService()
+    route_service = RouteService()
 
     # Form Data
     url = request.json.get("url")
@@ -20,10 +20,10 @@ def download() -> tuple[Response, int]:
     if url is None:
         return jsonify({"error": "url required"}), 400
 
-    task_id = route_handler.route_url(url, parent_directory, number_of_pages)
+    task_id = route_service.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
 
     if task_id in None:
-        return jsonify({'error': 'Could not process url request'}), 500
+        return jsonify({"error": "Could not process url request"}), 500
     else:
         return jsonify({"status": "success"}), 202
