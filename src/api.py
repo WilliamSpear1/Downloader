@@ -1,14 +1,14 @@
 from flask import Flask, Response, request, jsonify
 
-from src.configuration.logger_config import setup_logging
-from src.service.route_service import RouteService
+from .configuration.logger_config import setup_logging
+from .service.route_service import RouteService
 from flask_cors import CORS
 
 logger = setup_logging(__name__)
-app = Flask( __name__)
-CORS(app)
+api = Flask( __name__)
+CORS(api)
 
-@app.route("/download", methods=['POST'])
+@api.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:
     route_service = RouteService()
 

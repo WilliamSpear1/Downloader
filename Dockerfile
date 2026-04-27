@@ -73,4 +73,4 @@ ENV HOME=/home/appuser
 EXPOSE 5000
 
 # Default command (Gunicorn for Flask)
-CMD ["gunicorn", "-c", "conf/gunicorn.conf.py", "app:app"]
+CMD ["gunicorn", "-c", "src/configuration/gunicorn.conf.py", "src.api:api"]
