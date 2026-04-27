@@ -3,7 +3,7 @@ import time
 
 import requests
 
-from src.models.video import Video
+from src.model.video import Video
 from directory_handler import DirectoryHandler
 from downloader import Downloader
 

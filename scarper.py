@@ -4,7 +4,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
-from src.models.video import Video
+from src.model.video import Video
 
 logger = logging.getLogger(__name__)
 

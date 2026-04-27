@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from src.configuration.celery_app import celery_app
 from directory_handler import DirectoryHandler
 from downloader import Downloader
-from src.models.chrome_driver import ChromeDriver
+from src.model.chrome_driver import ChromeDriver
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
