@@ -1,7 +1,6 @@
 from flask import Flask, Response, request, jsonify
 
 from src.configuration.logger_config import setup_logging
-from src.configuration.properties import Properties
 from src.service.route_service import RouteService
 from flask_cors import CORS
 
@@ -11,7 +10,7 @@ CORS(app)
 
 @app.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:
-    route_handler = RouteService(Properties())
+    route_handler = RouteService()
 
     # Form Data
     url = request.json.get("url")
