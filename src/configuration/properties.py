@@ -9,19 +9,19 @@ class Properties:
         self._url = ""
 
     @property
-    def url(self):
+    def url(self) -> str:
         return self._url
 
     @url.setter
-    def url(self, value):
+    def url(self, value) -> None:
        self._url  = value
 
     @property
-    def website_names(self):
+    def website_names(self) -> dict:
         return self._website_names
 
     @website_names.setter
-    def website_names(self, value):
+    def website_names(self, value) -> None:
         self._website_names = value
 
     def get_website_names(self) -> dict:
@@ -41,7 +41,7 @@ class Properties:
 
         return self._website_names
 
-    def get_processor_url(self) -> str:
+    def get_processor_url(self) -> str|None:
         url = os.environ.get('URL_PROCESSOR')
         logger.info(f"URL: {url}")
         self._url = url
@@ -50,7 +50,7 @@ class Properties:
 
         return self._url
 
-    def get_check_url(self):
+    def get_check_url(self) -> str|None:
         url = os.environ.get('CHECK_URL')
         logger.info(f"URL: {url}")
         self._url = url

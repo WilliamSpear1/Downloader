@@ -1,10 +1,7 @@
-import threading
-
 from flask import Flask, Response, request, jsonify
 
 from src.configuration.logger_config import setup_logging
-from src.service.monitor_service import MonitorService
-from properties import Properties
+from src.configuration.properties import Properties
 from src.service.route_service import RouteService
 from flask_cors import CORS
 
@@ -27,16 +24,7 @@ def download() -> tuple[Response, int]:
     task_id = route_handler.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
 
-    if 'hits' in url:
-        logger.debug("URL contains 'hits', skipping task monitoring.")
-        check_task(task_id, url)
-
-    return jsonify({"status": "success"}), 202
-
-def check_task(task_id:str,url:str="") -> None:
-    properties = Properties()
-
-    check_url = properties.get_check_url()
-    monitor = MonitorService(task_id, check_url)
-    thread = threading.Thread(target=monitor.probe, args=(url,), daemon=True)
-    thread.start()
+    if task_id in None:
+        return jsonify({'error': 'Could not process url request'}), 500
+    else:
+        return jsonify({"status": "success"}), 202

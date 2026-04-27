@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
-from directory_creation_error import DirectoryCreationError
+from src.error.directory_creation_error import DirectoryCreationError
 
 logger = logging.getLogger(__name__)
 
