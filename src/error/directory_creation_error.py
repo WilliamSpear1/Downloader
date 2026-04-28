@@ -1,4 +1,3 @@
-
 class DirectoryCreationError(Exception):
     def __init__(self, video_path, error):
         self.video_path = video_path

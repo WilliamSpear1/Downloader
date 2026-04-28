@@ -4,14 +4,14 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
-from conf.logger_config import setup_logging
-from directory_creation_error import DirectoryCreationError
+from ..configuration.logger_config import setup_logging
+from ..error.directory_creation_error import DirectoryCreationError
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
-class DirectoryHandler:
+class DirectoryService:
 
-    def create_directory_url(self, url: str, parent_directory: str | None = None) -> str:
+    def create_directory(self, url: str, parent_directory: str | None = None) -> str:
         """Create a directory for a given url under /videos path."""
         logger.info(f"Creating Directory for {url}")
 
@@ -46,14 +46,6 @@ class DirectoryHandler:
             raise DirectoryCreationError(video_path, e)
 
         return str(video_path)
-
-    @staticmethod
-    def create_directory(parent_directory: str | None = None) -> str:
-        """Create a directory for a given url under /videos."""
-        logger.info(f"Creating Directory for {parent_directory}")
-        path = Path("videos").joinpath(parent_directory)
-        path.mkdir(parents=True, exist_ok=True)
-        return str(path)
 
     @staticmethod
     def safe_dir_name(name: str) -> str:

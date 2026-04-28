@@ -2,19 +2,17 @@ import logging
 import threading
 
 import requests
-from werkzeug.datastructures import FileStorage
 
-from conf.logger_config import setup_logging
-from properties import Properties
-from scarper import Scarper
-from tasks import run_browser
+from ..configuration.logger_config import setup_logging
+from ..configuration.properties import Properties
+from .page_nav_service import run_browser
+from .monitor_service import MonitorService
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
-class RouteHandler:
-    def __init__(self, properties: Properties):
+class RouteService:
+    def __init__(self):
         self._task_id = None
-        self.properties = properties
 
     @property
     def task_id(self):
@@ -25,12 +23,14 @@ class RouteHandler:
         self._task_id = value
 
     def route_url(self, url:str, parent_directory:str, number_of_pages:int = 0) -> str:
-        website_names = self.properties.get_website_names()
+        properties = Properties()
+        website_names = properties.get_website_names()
 
         for key, value in website_names.items():
             if value in url:
                 if key == "hits":
                     self._task_id = self.handle_hits(url, number_of_pages)
+                    self.check_task(self._task_id, url)
                     break
                 elif key == "free":
                     self._task_id = self.handle_free(url, parent_directory, number_of_pages)
@@ -38,13 +38,9 @@ class RouteHandler:
 
         return self._task_id
 
-    @staticmethod
-    def handle_free(url:str, parent_directory:str, number_of_pages:int = 0) -> str:
-        task = run_browser.delay(url, number_of_pages, parent_directory)
-        return str(task.id)
-
     def handle_hits(self, fetch_url:str, number_of_pages:int = 0) -> str:
-        url_processor = self.properties.get_processor_url()
+        properties = Properties()
+        url_processor = properties.get_processor_url()
 
         logger.info(f"URL: {fetch_url}")
         logger.info(f"URL PROCESSOR: {url_processor}")
@@ -64,21 +60,15 @@ class RouteHandler:
         logger.info(f"Task Id from URL Processor: {task_id}")
         return task_id
 
-    def handle_upload(self, uploaded_file: FileStorage) -> str:
-        upload_url = self.properties.get_upload_url()
+    def check_task(self, task_id:str,url:str="") -> None:
+        properties = Properties()
 
-        logger.info(f"UPLOAD URL: {upload_url}")
-        files = {"file": (uploaded_file.filename, uploaded_file.stream)}
+        check_url = properties.get_check_url()
+        monitor = MonitorService(task_id, check_url)
+        thread = threading.Thread(target=monitor.probe, args=(url,), daemon=True)
+        thread.start()
 
-        logger.info("Sending off file")
-        response = requests.post(upload_url, files=files)
-
-        response.raise_for_status()
-        data = response.json()
-
-        if "task_id" not in data:
-            raise ValueError("Response JSON does not contain 'task_id'")
-        task_id = data['task_id']
-
-        logger.info(f"Task Id from UPLOAD URL: {task_id}")
-        return task_id
+    @staticmethod
+    def handle_free(url: str, parent_directory: str, number_of_pages: int = 0) -> str:
+        task = run_browser.delay(url, number_of_pages, parent_directory)
+        return str(task.id)

@@ -15,3 +15,4 @@ class Config:
         'x-message-ttl': 60000, # message expires after 60 seconds
         'x-max-length': 1000 # max 1000 messages in the queue
     }
+    include=['src.service.page_nav_service']

@@ -8,7 +8,7 @@ def safe_load_config() -> logging.Logger | None:
     environment = os.environ.get("ENVIRONMENT")
 
     try:
-        config_file = f'/app/logs/logging_config_{environment}.json'
+        config_file = f'/app/src/configuration/logging_config_{environment}.json'
         with open(config_file, 'r') as f:
             config = json.load(f)
         logging.config.dictConfig(config)

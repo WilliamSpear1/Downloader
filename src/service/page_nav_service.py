@@ -3,29 +3,29 @@ import logging
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from celery_app import celery_app
-from conf.logger_config import setup_logging
-from directory_handler import DirectoryHandler
-from downloader import Downloader
-from chrome_driver_factory import ChromeDriver
+from ..configuration.logger_config import setup_logging
+from ..configuration.celery_app import celery_app
+from .directory_service import DirectoryService
+from .downloader_service import DownloaderService
+from ..model.chrome_driver import ChromeDriver
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
-from scarper import Scarper
+from .scraper_service import ScarperService
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
-@celery_app.task(name="tasks.run_browser")
+@celery_app.task(name="page_nav_service.run_browser")
 def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:
     """Run the chrome driver, scrape videos across multiple pages, and download them."""
     chrome = ChromeDriver(url)
     driver = chrome.get_driver()
-    downloader = Downloader()
-    directory_handler = DirectoryHandler()
-    scarper = Scarper(url, number_of_pages, parent_directory)
+    downloader = DownloaderService()
+    directory_handler = DirectoryService()
+    scarper = ScarperService(url, number_of_pages, parent_directory)
 
     logger.info(f"Starting scrape -> {url}, Parent Dir: {parent_directory}")
-    path = directory_handler.create_directory_url(url, parent_directory)
+    path = directory_handler.create_directory(url, parent_directory)
 
     try:
         for page in range(1, number_of_pages + 1):

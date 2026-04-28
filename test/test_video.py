@@ -1,6 +1,6 @@
 import pytest
 
-from data.video import Video
+from src.model.video import Video
 
 
 class TestVideo:
