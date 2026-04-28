@@ -14,7 +14,7 @@ It supports scraping and downloading multiple video requests through the use of 
   - source .vevn/bin/activate # On Windows
 2. Install dependencies
   - pip install -r requirements.txt
-3. cp .env.exmaple .env
+3. cp env.exmaple .env
 4. docker run -d -p 6379:6379 redis:latest
 5.
     - python -m flask --app src.api run --host 0.0.0.0 --port 5000
@@ -22,7 +22,8 @@ It supports scraping and downloading multiple video requests through the use of 
 
 ## Docker Deployment
 1. docker network create app-net
-2. cp .env.example .env
-3. docker-compose up -d
-4. docker-compose logs -f downloader
-5. docker-compose logs -f downloader-celery-worker
+2. cp env.example .env
+3. docker-compose build
+4. docker-compose up -d
+5. docker-compose logs -f downloader
+6. docker-compose logs -f downloader-celery-worker
