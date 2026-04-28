@@ -4,9 +4,10 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
+from ..configuration.logger_config import setup_logging
 from ..model.video import Video
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 class ScarperService:
     def __init__(self, url: str, number_of__pages: int, parent_directory: str=""):

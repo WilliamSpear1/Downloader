@@ -3,11 +3,12 @@ import threading
 
 import requests
 
+from ..configuration.logger_config import setup_logging
 from ..configuration.properties import Properties
 from .page_nav_service import run_browser
 from .monitor_service import MonitorService
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 class RouteService:
     def __init__(self):

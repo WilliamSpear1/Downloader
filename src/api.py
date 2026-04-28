@@ -23,7 +23,7 @@ def download() -> tuple[Response, int]:
     task_id = route_service.route_url(url, parent_directory, number_of_pages)
     logger.info(f"Task Id In Flask Route: {task_id}")
 
-    if task_id in None:
+    if task_id is None:
         return jsonify({"error": "Could not process url request"}), 500
     else:
         return jsonify({"status": "success"}), 202

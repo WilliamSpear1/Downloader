@@ -1,12 +1,13 @@
 import json
-import logging
 from typing import Any
 
 from yt_dlp.utils import DownloadError
 from yt_dlp import YoutubeDL
+
+from ..configuration.logger_config import setup_logging
 from ..model.video import Video
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 class DownloaderService:
     def download_videos(self, videos:list) -> None:
@@ -50,7 +51,7 @@ class DownloaderService:
 
     def safe_load_opts(self) -> Any:
         try:
-            with open("../configuration/yt_dlp.json", "r") as file:
+            with open("/app/src/configuration/yt_dlp.json", "r") as file:
                 opts = json.load(file)
                 logger.info("Loaded yt_dlp options from yt_dlp_opts.json")
                 return opts

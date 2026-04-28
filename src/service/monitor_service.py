@@ -3,11 +3,12 @@ import time
 
 import requests
 
+from ..configuration.logger_config import setup_logging
 from ..model.video import Video
 from .directory_service import DirectoryService
 from .downloader_service import DownloaderService
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 class MonitorService:
     MAX_RETRIES = 20

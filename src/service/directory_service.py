@@ -4,9 +4,10 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+from ..configuration.logger_config import setup_logging
 from ..error.directory_creation_error import DirectoryCreationError
 
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 class DirectoryService:
 

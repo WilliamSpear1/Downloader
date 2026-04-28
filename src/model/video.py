@@ -1,7 +1,9 @@
 import logging
 import re
 
-logger = logging.getLogger(__name__)
+from ..configuration.logger_config import setup_logging
+
+logger = setup_logging(__name__)
 
 class Video:
     def __init__(self, title: str = "", link: str = "", path = "") -> None:

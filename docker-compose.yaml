@@ -23,8 +23,8 @@ services:
       - UPLOAD_URL=${UPLOAD_URL}
       - ENVIRONMENT=${ENVIRONMENT}
     volumes:
-      - C:\Users\spear\Videos:/app/videos
-      - C:\Users\spear\Logs:/app/log/
+      - /home/wilabeast/videos:/app/videos
+      - /home/wilabeast/logs:/app/log/
     networks:
       - app-net
 
@@ -35,10 +35,10 @@ services:
     image: downloader:dev
     user: "1000:1000"
     container_name: celery_worker_downloader
-    command: celery -A tasks worker -Q downloader_queue -l info --events
+    command: celery -A src.configuration.celery_app worker -Q downloader_queue -l info --events
     volumes:
-      - C:\Users\spear\Videos:/app/videos
-      - C:\Users\spear\Logs:/app/log/
+      - /home/wilabeast/videos:/app/videos
+      - /home/wilabeast/logs:/app/log/
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
