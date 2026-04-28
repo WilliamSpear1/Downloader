@@ -12,3 +12,4 @@ flask
 webdriver-manager
 gunicorn
 ffmpeg
+pytest
