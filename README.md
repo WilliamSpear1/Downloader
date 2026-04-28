@@ -1,6 +1,6 @@
 # Downloader
 A robust **asynchronous video downloader** service built with Flask, Celery, and Selenium.
-It supports scraper and downloader multiple video requests through the use of yt-dlp downloader.
+It supports scraping and downloading multiple video requests through the use of yt-dlp downloader.
 
 ## Prerequisites
 - **Python 3.12**
