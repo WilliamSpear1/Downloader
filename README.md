@@ -16,8 +16,7 @@ It supports scraping and downloading multiple video requests through the use of 
   - pip install -r requirements.txt
 3. cp .env.exmaple .env
 4. docker run -d -p 6379:6379 redis:latest
-5.
-  A) python -m flask --app src.api run --host 0.0.0.0 --port 5000
+5.A) python -m flask --app src.api run --host 0.0.0.0 --port 5000
   B) celery -A src.configuration.celery_app worker -Q downloader_queue -l info
 
 ## Docker Deployment
