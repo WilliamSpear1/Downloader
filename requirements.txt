@@ -11,5 +11,4 @@ yt-dlp
 flask
 webdriver-manager
 gunicorn
-ffmpeg
 pytest

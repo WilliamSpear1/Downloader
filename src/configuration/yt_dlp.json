@@ -5,9 +5,11 @@
   "nooverwrites": false,
   "paths": {
     "temp": "/tmp"
-  }
-  "ratelimit": 500000,
-  "downloader": "m3u8:ffmpeg",
+  },
+  "downloader": {
+    "default": "ffmpeg",
+    "m3u8": "ffmpeg"
+  },
   "hls_use_mpegts": true,
   "check_formats": false,
   "extractor_args": {
@@ -15,6 +17,13 @@
       "player_client": ["android", "web"],
       "skip": ["dash", "hls"]
     }
+  },
+  "postprocessor_args": {
+    "ffmpeg": [
+     "-err_detect", "ignore_err",
+      "-max_interleave_delta", "0",
+      "-bsf:a", "aac_adstoasc"
+    ]
   },
   "abort_on_unavailable_fragments": false,
   "format": "bestvideo[height>=720][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/best[height>=720][ext=mp4]/best[height>=720]",

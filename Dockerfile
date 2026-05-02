@@ -5,9 +5,25 @@ FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
-# Install runtime dependencies + Chromium for Selenium
+# Upgrade pip and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+
+FROM python:3.12-slim AS runtime
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+WORKDIR /app
+
+# Install Chrome pulled from this stackoverflow thread:https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    gnupg \
+    ffmpeg \
+    ca-certificates \
     unzip \
+    # The following are needed for Chrome to run in headless environment.
     libglib2.0-0 \
     libnss3 \
     libx11-6 \
@@ -27,25 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libdrm2 \
     libdbus-1-3 \
     libgtk-3-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Upgrade pip and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
-
-FROM python:3.12-slim AS runtime
-ARG USER_ID=1000
-ARG GROUP_ID=1000
-
-WORKDIR /app
-
-# Install Chrome pulled from this stackoverflow thread:https://stackoverflow.com/questions/70955307/how-to-install-google-chrome-in-a-docker-container
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget \
-    gnupg \
-    ca-certificates && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable && \
