@@ -58,14 +58,6 @@ class TestDirectoryService(unittest.TestCase):
             self.service.create_directory(url)
         self.assertIn("Cannot extract directory name", str(cm.exception))
 
-    @patch('pathlib.Path.mkdir', side_effect=OSError("Permission denied"))
-    @patch('src.service.directory_service.logger')
-    def test_create_directory_permission_error_raises_custom_error(self, mock_logger, mock_mkdir):
-        url = "https://example.com/videos/test"
-        from src.error.directory_creation_error import DirectoryCreationError
-        with self.assertRaises(DirectoryCreationError):
-            self.service.create_directory(url)
-
     def test_safe_dir_name_sanitizes_special_chars(self):
         self.assertEqual(DirectoryService.safe_dir_name("My.Video+Name"), "My_Video_Name")
         self.assertEqual(DirectoryService.safe_dir_name("___Name___"), "Name")

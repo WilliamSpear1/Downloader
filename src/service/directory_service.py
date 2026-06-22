@@ -5,7 +5,6 @@ from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
 from ..configuration.logger_config import setup_logging
-from ..error.directory_creation_error import DirectoryCreationError
 
 logger = setup_logging(__name__)
 
@@ -43,7 +42,8 @@ class DirectoryService:
             logger.info(f"Target Path: {video_path.resolve()}")
             logger.info(f"Created directory: {video_path}")
         except (FileNotFoundError, PermissionError, OSError) as e:
-            raise DirectoryCreationError(video_path, e)
+            logger.error(f"Failed to create directory {video_path}. Error: {e.__class__.__name__} - {e}")
+            raise
 
         return str(video_path)
 
