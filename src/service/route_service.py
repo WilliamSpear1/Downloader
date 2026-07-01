@@ -29,13 +29,16 @@ class RouteService:
         for key, value in website_names.items():
             if value in url:
                 if key == "hits":
+                    logger.info("Website name has hits.")
                     self._task_id = self.handle_hits(url, number_of_pages)
                     self.check_task(self._task_id, url)
                     break
                 else:
+                    logger.info("Website Name does not have hits routing elsewhere.")
                     self._task_id = self.handle_free(url, parent_directory, number_of_pages)
                     break
-
+        if self._task_id is None:
+            raise TypeError("Expected Task Id to be provided a value.")
         return self._task_id
 
     def handle_hits(self, fetch_url:str, number_of_pages:int = 0) -> str:
