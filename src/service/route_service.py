@@ -32,7 +32,7 @@ class RouteService:
                     self._task_id = self.handle_hits(url, number_of_pages)
                     self.check_task(self._task_id, url)
                     break
-                elif key == "free":
+                else:
                     self._task_id = self.handle_free(url, parent_directory, number_of_pages)
                     break
 
