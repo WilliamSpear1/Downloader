@@ -8,7 +8,7 @@ from ..configuration.celery_app import celery_app
 from .directory_service import DirectoryService
 from .downloader_service import DownloaderService
 from ..model.chrome_driver import ChromeDriver
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, TimeoutException
 
 from selenium.webdriver.common.by import By
 from .scraper_service import ScarperService
@@ -40,11 +40,10 @@ def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:
 
             # find and click the next page if it exists
             try:
-                next_page_link = driver.find_element(By.CSS_SELECTOR, "li.next a")
-                WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.next a")))
+                next_page_link = WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.next a")))
                 driver.execute_script("arguments[0].click()", next_page_link)
-            except NoSuchElementException as e:
-                logger.error(f"No Such Element Exception Has Occurred: {e}")
+            except TimeoutException:
+                logger.info("No next page link found on site.")
                 break
     except Exception as e:
         logger.error(f"Unexpected error during scraping: {e}", exc_info=True)
