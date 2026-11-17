@@ -5,8 +5,17 @@ from ..configuration.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
+"""
+Represents a video with a title, link, and download path. 
+Handles title reformatting for hyphen-separated names.
+"""
 class Video:
-    def __init__(self, title: str = "", link: str = "", path = "") -> None:
+    def __init__(
+            self,
+            title: str = "",
+            link: str = "",
+            path: str = ""
+    ) -> None:
         if link and "hit" in link:
             self._title = self.get_videos_title(video_title=title, title_position=-1)
         else:
@@ -15,27 +24,27 @@ class Video:
         self._path = path
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self._title
 
     @title.setter
-    def title(self, title):
+    def title(self, title: str) -> None:
         self._title = title
 
     @property
-    def link(self):
+    def link(self) -> str:
         return self._link
 
     @link.setter
-    def link(self, link):
+    def link(self, link: str) -> None:
         self._link = link
 
     @property
-    def path(self):
+    def path(self) -> str:
         return self._path
 
     @path.setter
-    def path(self, path):
+    def path(self, path: str) -> None:
         self._path = path
 
     def get_videos_title(
@@ -43,23 +52,6 @@ class Video:
         video_title:str,
         title_position:int,
     ) -> str:
-        """
-           Extracts the name(s) and title from a formatted video string.
-
-           Example:
-               Input: 'Alice-Bob-Charlie-MyVideo'
-               Output: [Alice, Bob, Charlie]MyVideo
-            Vise Vera:
-                Input: 'MyVideo-Alice-Bob-Charlie'
-                Output: [Charlie, Bob, Alice]MyVideo
-
-           Args:
-               video_title: The raw title string (e.g., "Alice-Bob-MyVideo")
-               title_position: Index of the title within the split parts
-
-           Returns:
-                A formatted string "[Names]Title" or just "Title".
-           """
         if title_position == -1 and "[" in video_title:
             logger.info("Video Title are ready formatted.")
             return video_title
@@ -84,5 +76,5 @@ class Video:
 
         return title
 
-    def _clean_title(self,url:str) -> str:
+    def _clean_title(self, url: str) -> str:
         return re.sub(r"[.,+,]", "", url).strip("_")

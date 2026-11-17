@@ -8,6 +8,15 @@ logger = setup_logging(__name__)
 api = Flask( __name__)
 CORS(api)
 
+"""
+Handle incoming download requests by validating the URL and routing it to the appropriate service.
+
+Expects a JSON body with 'url' (required), 'parent_directory' (optional),
+and 'number_of_pages' (optional, defaults to 1).
+
+Returns:
+    A JSON response with either a success status (202) or an error message (400/500).
+"""
 @api.route("/download", methods=['POST'])
 def download() -> tuple[Response, int]:
     route_service = RouteService()

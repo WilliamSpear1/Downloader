@@ -5,8 +5,12 @@ from .logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
+"""
+Holds runtime configuration loaded from environment variables, including website names and service URLs.
+"""
 class Properties:
-    def __init__(self):
+
+    def __init__(self) -> None:
         self._website_names = {}
         self._url = ""
 
@@ -15,7 +19,7 @@ class Properties:
         return self._url
 
     @url.setter
-    def url(self, value) -> None:
+    def url(self, value: str) -> None:
        self._url  = value
 
     @property
@@ -23,7 +27,7 @@ class Properties:
         return self._website_names
 
     @website_names.setter
-    def website_names(self, value) -> None:
+    def website_names(self, value: dict) -> None:
         self._website_names = value
 
     def get_website_names(self) -> dict:

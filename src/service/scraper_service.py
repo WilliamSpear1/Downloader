@@ -9,15 +9,36 @@ from ..model.video import Video
 
 logger = setup_logging(__name__)
 
+"""
+Extracts video metadata (title and link) from web pages using Selenium.
+"""
 class ScarperService:
-    def __init__(self, url: str, number_of__pages: int, parent_directory: str=""):
+
+    def __init__(
+            self,
+            url: str,
+            number_of__pages: int,
+            parent_directory: str = ""
+    ):
         self.url = url
         self.number_of_pages = number_of__pages
         self.parent_directory = parent_directory
 
+    """
+    Extract all video elements (title and link) from the current page.
+
+    Searches for all 'div.item-info' elements and extracts the href and title
+    from the nested 'a.thumb_title' link within each.
+
+    Args:
+        driver: The active Selenium WebDriver instance.
+        path: The directory path where scraped videos will be saved.
+
+    Returns:
+        A list of Video objects containing the extracted title, link, and path.
+    """
     @staticmethod
-    def scrape_multiple_videos(driver: WebDriver, path:str) -> list:
-        """Extract Video Elements (title + link) from current page."""
+    def scrape_multiple_videos(driver: WebDriver, path: str) -> list[Video]:
         videos = []
         video_elements = driver.find_elements(By.CSS_SELECTOR, "div.item-info")
 

@@ -9,8 +9,12 @@ from ..configuration.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
+"""
+Manages a headless Chrome browser instance via Selenium for web scraping.
+"""
 class ChromeDriver:
-    def __init__(self, url:str) -> None:
+
+    def __init__(self, url: str) -> None:
         self.url = url
         self.driver = self.browser()
 

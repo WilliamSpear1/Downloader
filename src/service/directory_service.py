@@ -8,10 +8,29 @@ from ..configuration.logger_config import setup_logging
 
 logger = setup_logging(__name__)
 
+"""
+Creates and manages download directories based on URL parsing and sanitization.
+"""
 class DirectoryService:
+    """
+    Create a directory for a given URL under the ./videos path.
 
+    Parses the URL to extract a directory name. For 'hits' URLs, extracts
+    the 'ps' or 'spon' query parameter; for other URLs, extracts the last
+    valid path segment. The name is sanitized and uppercased before creating
+    the directory.
+
+    Args:
+        url: The website URL to parse for the directory name.
+        parent_directory: Optional top-level folder name for organizing downloads.
+
+    Returns:
+        The absolute path string of the created directory.
+
+    Raises:
+        ValueError: If the directory name cannot be extracted from the URL.
+    """
     def create_directory(self, url: str, parent_directory: str | None = None) -> str:
-        """Create a directory for a given url under /videos path."""
         logger.info(f"Creating Directory for {url}")
 
         directory_name = None
@@ -47,12 +66,36 @@ class DirectoryService:
 
         return str(video_path)
 
+    """
+    Sanitize a string to be safe for use as a filesystem directory name.
+
+    Replaces any character that is not alphanumeric, underscore, or hyphen
+    with an underscore. Strips leading/trailing underscores; returns 'default'
+    if the result is empty.
+
+    Args:
+        name: The raw directory name string.
+
+    Returns:
+        A filesystem-safe directory name string.
+    """
     @staticmethod
     def safe_dir_name(name: str) -> str:
-        """Sanitize string to be filesystem-safe."""
         return re.sub(r"[^a-zA-Z0-9_\-]", "_", name).strip("_") or "default"
 
-    def _get_end(self, parts: list) -> str:
+    """
+    Extract the meaningful directory name from URL path segments.
+
+    If the last segment is a valid name (not 'most-popular' or 'top-rated'),
+    uses it; otherwise falls back to the second-to-last segment.
+
+    Args:
+        parts: List of URL path segments split by '/'.
+
+    Returns:
+        The extracted directory name string.
+    """
+    def _get_end(self, parts: list[str]) -> str:
         url_end = None
 
         if self._is_valid_end(parts[-1]):
@@ -62,6 +105,18 @@ class DirectoryService:
 
         return url_end
 
+    """
+    Check if a URL path segment is a valid directory name.
+
+    Segments 'most-popular' and 'top-rated' are considered invalid because
+    they are site navigation labels, not content identifiers.
+
+    Args:
+        end_url: The URL path segment to validate.
+
+    Returns:
+        True if the segment is a valid directory name, False otherwise.
+    """
     def _is_valid_end(self, end_url: str) -> bool:
         URL_MOST_POP = "most-popular"
         URL_TOP_RATED = "top-rated"
