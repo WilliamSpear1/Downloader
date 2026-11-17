@@ -1,4 +1,3 @@
-import logging
 import time
 
 import requests
@@ -10,15 +9,39 @@ from .downloader_service import DownloaderService
 
 logger = setup_logging(__name__)
 
+"""
+Monitors an external task's status by polling a check URL, then downloads the resulting videos.
+"""
 class MonitorService:
+
     MAX_RETRIES = 20
 
-    def __init__(self, task_id: str, check_url: str, interval: int=60):
+    """Initialize the monitor with the task ID, check endpoint, and polling interval.
+
+    Args:
+        task_id: The external task ID to monitor.
+        check_url: The base URL endpoint for checking task status.
+        interval: Seconds to wait between polling attempts (defaults to 60).
+    """
+    def __init__(
+            self,
+            task_id: str,
+            check_url: str,
+            interval: int = 60
+    ) -> None:
         self._task_id = task_id
         self._check_url = check_url
         self._interval = interval
 
-    def probe(self, url:str="") -> None:
+    """Poll the external task status until it completes or times out, then download any resulting videos.
+
+    Repeatedly calls monitor_task up to MAX_RETRIES times at the configured interval.
+    If the task succeeds, creates a download directory and downloads the videos.
+
+    Args:
+        url: Optional URL used for creating the download directory.
+    """
+    def probe(self, url: str = "") -> None:
         downloader = DownloaderService()
         directory_handler = DirectoryService()
         status = None
@@ -49,6 +72,14 @@ class MonitorService:
 
         return None
 
+    """Check the current status of the external task via the check URL.
+
+    Sends a GET request to the check endpoint with the task ID. Returns the
+    result dict if the task succeeded, None if still pending or on error.
+
+    Returns:
+        A dict of video title-link pairs if the task succeeded, or None otherwise.
+    """
     def monitor_task(self) -> dict | None:
         try:
             response = requests.get(

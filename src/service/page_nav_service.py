@@ -15,9 +15,19 @@ from .scraper_service import ScarperService
 
 logger = setup_logging(__name__)
 
+"""Celery task that orchestrates the full download pipeline: browser launch, scraping, and downloading.
+
+Launches a headless Chrome browser, creates a download directory, then iterates
+through each page to scrape video links and download them. Navigates to the next
+page after each iteration until all pages are processed or no next page exists.
+
+Args:
+    url: The starting website URL to scrape for videos.
+    number_of_pages: The number of pages to scrape sequentially.
+    parent_directory: The top-level folder name for organizing downloads.
+"""
 @celery_app.task(name="page_nav_service.run_browser")
-def run_browser(url:str, number_of_pages:int, parent_directory:str="") -> None:
-    """Run the chrome driver, scrape videos across multiple pages, and download them."""
+def run_browser(url: str, number_of_pages: int, parent_directory: str = "") -> None:
     chrome = ChromeDriver(url)
     driver = chrome.get_driver()
     downloader = DownloaderService()
